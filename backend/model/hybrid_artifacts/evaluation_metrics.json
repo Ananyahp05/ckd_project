@@ -1,0 +1,9 @@
+{
+  "test_mae": 5.801212310791016,
+  "test_rmse": 7.290268711323389,
+  "test_r2": 0.04862755537033081,
+  "train_patients": 3500,
+  "validation_patients": 750,
+  "test_patients": 750,
+  "test_sequences": 4051
+}

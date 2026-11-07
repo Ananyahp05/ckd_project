@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Explainable AI-based early chronic kidney disease prediction using federated deep learning</string>
+    <string name="title_activity_main">Explainable AI-based early chronic kidney disease prediction using federated deep learning</string>
+    <string name="package_name">com.ckdproject.health</string>
+    <string name="custom_url_scheme">com.ckdproject.health</string>
+</resources>

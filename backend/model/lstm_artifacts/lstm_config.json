@@ -1,0 +1,12 @@
+{
+  "model_type": "LSTM regression",
+  "prediction_target": "next observed eGFR (aval)",
+  "input_features": [
+    "aval",
+    "ady",
+    "base"
+  ],
+  "timesteps": 3,
+  "parameter_code": "GFRBSCRT",
+  "random_state": 42
+}

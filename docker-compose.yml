@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # 1. PostgreSQL Relational Database Service (HIPAA / Enterprise Clinical Tier)
+  # ─────────────────────────────────────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: ckd_postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ckd_db
+      POSTGRES_USER: ckd_admin
+      POSTGRES_PASSWORD: ckd_secure_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - ckd_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ckd_admin -d ckd_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ckd_network
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # 2. FastAPI Deep Learning Backend & WebSocket Alert Stream
+  # ─────────────────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ckd_backend_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://ckd_admin:ckd_secure_password_2026@db:5432/ckd_db
+      SECRET_KEY: edcif-production-secret-key-2026-hipaa-protected
+      KERAS_HOME: /app/.keras_cache
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/model:/app/model
+    networks:
+      - ckd_network
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # 3. Next.js Clinical Health Intelligence Portal (Doctor, Patient & Admin)
+  # ─────────────────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ckd_frontend_ui
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ckd_network
+
+volumes:
+  ckd_pgdata:
+    driver: local
+
+networks:
+  ckd_network:
+    driver: bridge
+

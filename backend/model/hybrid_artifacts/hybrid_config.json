@@ -1,0 +1,15 @@
+{
+  "model_type": "Hybrid Dense + LSTM regression",
+  "prediction_target": "next observed eGFR (aval)",
+  "sequence_features": [
+    "aval",
+    "ady"
+  ],
+  "baseline_features": [
+    "base"
+  ],
+  "timesteps": 3,
+  "selected_paramcd": "GFRBSCRT",
+  "patient_id_column": "usubjid",
+  "time_column": "ady"
+}
