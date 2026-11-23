@@ -9,13 +9,15 @@ from api.routes import router as predict_router
 from api.auth import router as auth_router
 from database import engine, SessionLocal
 from models import db_models
+from services.kafka_service import kafka_service
 
 db_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="EDCIF CKD Prediction API")
 
 @app.on_event("startup")
-def startup_db_seed():
+async def startup_services():
+    # 1. Startup DB Seed
     db = SessionLocal()
     try:
         admin = db.query(db_models.User).filter(db_models.User.username == "admin").first()
@@ -50,6 +52,19 @@ def startup_db_seed():
         print(f"[DB] Startup seeding skipped: {e}")
     finally:
         db.close()
+
+    # 2. Connect to Apache Kafka Cloud Broker
+    try:
+        await kafka_service.start()
+    except Exception as e:
+        print(f"[KAFKA] Startup initialization notice: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_services():
+    try:
+        await kafka_service.stop()
+    except Exception as e:
+        print(f"[KAFKA] Shutdown notice: {e}")
 
 app.add_middleware(
     CORSMiddleware,

@@ -196,213 +196,111 @@ export default function AdminDashboard({ token }: Props) {
   };
 
   return (
-    <div style={{ display: "flex", gap: "24px", minHeight: "82vh", maxWidth: "1500px", margin: "0 auto" }}>
-      <style>{`
-        .admin-sidepanel {
-          width: 270px;
-          flex-shrink: 0;
-          background: #ffffff;
-          border-radius: 18px;
-          border: 1px solid #e2e8f0;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-          padding: 20px 14px;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          height: fit-content;
-        }
-        .sidepanel-brand {
-          padding: 12px 14px;
-          margin-bottom: 12px;
-          border-bottom: 1px solid #f1f5f9;
-        }
-        .admin-side-item {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 16px;
-          border-radius: 12px;
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #475569;
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s;
-          text-align: left;
-          width: 100%;
-        }
-        .admin-side-item:hover {
-          background: #f0f9ff;
-          color: #0284c7;
-        }
-        .admin-side-item--active {
-          background: linear-gradient(135deg, #0284c7, #0369a1);
-          color: #ffffff !important;
-          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
-        }
-        .admin-content-area {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          min-width: 0;
-        }
-        .admin-white-card {
-          background: #ffffff;
-          border-radius: 18px;
-          border: 1px solid #e2e8f0;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-          padding: 24px;
-          color: #0f172a;
-        }
-        .admin-table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 0.88rem;
-        }
-        .admin-table th {
-          text-align: left;
-          padding: 14px 16px;
-          background: #f8fafc;
-          color: #475569;
-          font-weight: 700;
-          border-bottom: 2px solid #e2e8f0;
-          font-size: 0.8rem;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-        .admin-table td {
-          padding: 14px 16px;
-          border-bottom: 1px solid #f1f5f9;
-          color: #1e293b;
-          vertical-align: middle;
-        }
-        .clickable-row {
-          cursor: pointer;
-          transition: background 0.15s ease;
-        }
-        .clickable-row:hover {
-          background: #f0f9ff !important;
-        }
-        .status-badge-active { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 50px; font-weight: 700; font-size: 0.72rem; }
-        .status-badge-deact { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 50px; font-weight: 700; font-size: 0.72rem; }
-        .status-badge-pending { background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 50px; font-weight: 700; font-size: 0.72rem; }
-      `}</style>
-
-      {/* ── 1. LEFT SIDEPANEL ── */}
-      <aside className="admin-sidepanel">
-        <div className="sidepanel-brand">
-          <div style={{ fontSize: "0.75rem", fontWeight: 800, color: "#b45309", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            Hospital Governance
+    <div className="clinical-shell-container">
+      {/* ── 1. LEFT SIDEPANEL: EXTENDS FLUSH TO FOOTER (NO FLOATING CARD) ── */}
+      <aside className="clinical-sidebar">
+        <div className="sidebar-brand-block">
+          <div className="sidebar-brand-tag">
+            Hospital Administration
           </div>
-          <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a", marginTop: "2px" }}>
+          <div className="sidebar-brand-name">
             Admin Console
           </div>
-          <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: "2px" }}>
-            MetroHealth Institute
+          <div className="sidebar-brand-dept">
+            Clinical Governance & Security
           </div>
         </div>
 
         <button
           onClick={() => { setActiveSideNav("doctors"); setSelectedDoctorId(null); }}
-          className={`admin-side-item ${activeSideNav === "doctors" ? "admin-side-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "doctors" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>👨‍⚕️</span>
+          <span style={{ fontSize: "1rem" }}>👨‍⚕️</span>
           <span>Doctors ({doctors.length})</span>
         </button>
 
         <button
           onClick={() => { setActiveSideNav("patients"); setSelectedPatientId(null); }}
-          className={`admin-side-item ${activeSideNav === "patients" ? "admin-side-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "patients" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>👥</span>
+          <span style={{ fontSize: "1rem" }}>👥</span>
           <span>Patients ({patients.length})</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("overview")}
-          className={`admin-side-item ${activeSideNav === "overview" ? "admin-side-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "overview" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>📊</span>
+          <span style={{ fontSize: "1rem" }}>📊</span>
           <span>Hospital Overview</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("techs")}
-          className={`admin-side-item ${activeSideNav === "techs" ? "admin-side-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "techs" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>🧪</span>
+          <span style={{ fontSize: "1rem" }}>🧪</span>
           <span>Lab Technicians ({techs.length})</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("invite")}
-          className={`admin-side-item ${activeSideNav === "invite" ? "admin-side-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "invite" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>➕</span>
+          <span style={{ fontSize: "1rem" }}>➕</span>
           <span>Invite Staff</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("federated")}
-          className={`admin-side-item ${activeSideNav === "federated" ? "admin-side-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "federated" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>⚙</span>
+          <span style={{ fontSize: "1rem" }}>⚙</span>
           <span>Federated Learning</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("audit")}
-          className={`admin-side-item ${activeSideNav === "audit" ? "admin-side-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "audit" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>📁</span>
+          <span style={{ fontSize: "1rem" }}>📁</span>
           <span>Activity & Audit Logs</span>
         </button>
       </aside>
 
-      {/* ── 2. MAIN ADMIN CONTENT AREA ── */}
-      <div className="admin-content-area">
+      {/* ── 2. FLUID CLINICAL CONTENT AREA ── */}
+      <div className="clinical-content-area">
         
         {/* ── A. DOCTORS ROSTER (1 ROW PER DOCTOR -> CLICK ROW FOR DETAILS) ── */}
         {activeSideNav === "doctors" && !selectedDoctorId && (
-          <div className="admin-white-card">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+          <div className="clinical-panel">
+            <div className="clinical-panel-header">
               <div>
-                <h2 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>
+                <h2 className="panel-title">
                   Hospital Medical Staff & Doctors Roster
                 </h2>
-                <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "4px 0 0 0" }}>
-                  Each doctor is displayed in a clean row. <strong>Click any doctor row</strong> to view their full profile and assigned patients list.
+                <p className="panel-description">
+                  Each doctor is displayed in a clean row. Click any row to view their profile, active status, and assigned patients.
                 </p>
               </div>
 
               <button
                 onClick={() => setActiveSideNav("invite")}
-                style={{
-                  background: "#0284c7",
-                  color: "#ffffff",
-                  border: "none",
-                  padding: "10px 18px",
-                  borderRadius: "10px",
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  cursor: "pointer",
-                }}
+                className="btn-primary-teal"
               >
-                ➕ Invite New Doctor
+                + Invite New Doctor
               </button>
             </div>
 
-            <div style={{ overflowX: "auto" }}>
-              <table className="admin-table">
+            <div className="clinical-table-container">
+              <table className="clinical-table">
                 <thead>
                   <tr>
                     <th>Doctor ID</th>
                     <th>Doctor Name</th>
                     <th>Email Address</th>
                     <th>Status</th>
-                    <th>Assigned Patients Count</th>
+                    <th>Assigned Patients</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -413,15 +311,21 @@ export default function AdminDashboard({ token }: Props) {
                       onClick={() => handleSelectDoctorRow(d.id)}
                       className="clickable-row"
                     >
-                      <td style={{ fontWeight: 800, color: "#0284c7" }}>#{d.id}</td>
-                      <td style={{ fontWeight: 700, color: "#0f172a" }}>{d.full_name}</td>
-                      <td style={{ color: "#475569" }}>{d.email}</td>
+                      <td style={{ fontWeight: 700, color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                        #{d.id}
+                      </td>
+                      <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>
+                        {d.full_name}
+                      </td>
+                      <td style={{ color: "var(--text-secondary)" }}>
+                        {d.email}
+                      </td>
                       <td>
-                        <span className={d.is_active ? "status-badge-active" : "status-badge-deact"}>
+                        <span className={`badge-clinical ${d.is_active ? "badge-clinical--low" : "badge-clinical--high"}`}>
                           {d.account_status.toUpperCase()}
                         </span>
                       </td>
-                      <td style={{ fontWeight: 800, color: "#0284c7" }}>
+                      <td style={{ fontWeight: 600, fontFamily: "JetBrains Mono, monospace", color: "var(--text-primary)" }}>
                         {d.assigned_patient_count} patients
                       </td>
                       <td>
@@ -430,16 +334,8 @@ export default function AdminDashboard({ token }: Props) {
                             e.stopPropagation();
                             handleSelectDoctorRow(d.id);
                           }}
-                          style={{
-                            background: "#f1f5f9",
-                            color: "#0369a1",
-                            border: "1px solid #cbd5e1",
-                            padding: "6px 14px",
-                            borderRadius: "8px",
-                            fontSize: "0.78rem",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                          }}
+                          className="btn-secondary"
+                          style={{ fontSize: "0.78rem", padding: "5px 12px" }}
                         >
                           View Details &rarr;
                         </button>
@@ -455,87 +351,87 @@ export default function AdminDashboard({ token }: Props) {
         {/* ── DOCTOR DETAILS VIEW (WHEN A DOCTOR ROW IS CLICKED) ── */}
         {activeSideNav === "doctors" && selectedDoctorId && (
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            <div className="admin-white-card">
+            <div className="clinical-panel">
               <button
                 onClick={() => setSelectedDoctorId(null)}
-                style={{
-                  background: "#f1f5f9",
-                  border: "1px solid #cbd5e1",
-                  padding: "6px 14px",
-                  borderRadius: "8px",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  color: "#334155",
-                  cursor: "pointer",
-                  marginBottom: "12px",
-                }}
+                className="btn-secondary"
+                style={{ marginBottom: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
               >
                 &larr; Back to Doctors Roster
               </button>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
                 <div>
-                  <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>
+                  <h2 style={{ fontSize: "1.45rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
                     {doctorDetails?.doctor?.full_name}
                   </h2>
-                  <div style={{ fontSize: "0.85rem", color: "#64748b", marginTop: "4px" }}>
-                    Email: <strong>{doctorDetails?.doctor?.email}</strong> &bull; Total Assigned Patients: <strong>{doctorDetails?.assigned_patients?.length || 0}</strong>
+                  <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px" }}>
+                    Email: <strong style={{ color: "var(--text-primary)" }}>{doctorDetails?.doctor?.email}</strong> &bull; Total Assigned Patients: <strong style={{ color: "var(--color-primary-accent)" }}>{doctorDetails?.assigned_patients?.length || 0}</strong>
                   </div>
                 </div>
 
                 <button
                   onClick={() => handleToggleDoctorStatus(doctorDetails.doctor.id, doctorDetails.doctor.is_active)}
+                  className="btn-secondary"
                   style={{
-                    background: doctorDetails?.doctor?.is_active ? "#fee2e2" : "#dcfce7",
-                    color: doctorDetails?.doctor?.is_active ? "#991b1b" : "#166534",
-                    border: "none",
-                    padding: "10px 18px",
-                    borderRadius: "10px",
-                    fontWeight: 700,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
+                    color: doctorDetails?.doctor?.is_active ? "var(--risk-high)" : "var(--risk-low)",
+                    borderColor: doctorDetails?.doctor?.is_active ? "var(--risk-high-border)" : "var(--risk-low-border)",
+                    fontWeight: 600
                   }}
                 >
-                  {doctorDetails?.doctor?.is_active ? "🚫 Deactivate Account" : "✅ Activate Account"}
+                  {doctorDetails?.doctor?.is_active ? "Deactivate Account" : "Activate Account"}
                 </button>
               </div>
             </div>
 
             {/* Assigned Patients Table for this Doctor */}
-            <div className="admin-white-card">
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#0f172a", marginBottom: "14px" }}>
+            <div className="clinical-panel">
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "14px" }}>
                 Patients Assigned to {doctorDetails?.doctor?.full_name}
               </h3>
 
               {doctorDetails?.assigned_patients?.length === 0 ? (
-                <p style={{ color: "#64748b" }}>No patients currently assigned to this physician.</p>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>No patients currently assigned to this physician.</p>
               ) : (
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Patient MRN</th>
-                      <th>Patient Name</th>
-                      <th>Age / Gender</th>
-                      <th>Latest Diagnosis Status</th>
-                      <th>Risk Score</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {doctorDetails?.assigned_patients?.map((p: any) => (
-                      <tr key={p.patient_id}>
-                        <td style={{ fontWeight: 800, color: "#0284c7" }}>{p.patient_id}</td>
-                        <td style={{ fontWeight: 700 }}>{p.full_name}</td>
-                        <td>{p.age} yrs &bull; {p.gender}</td>
-                        <td style={{ fontWeight: 700, color: p.latest_prediction === "ckd" ? "#dc2626" : "#166534" }}>
-                          {p.latest_prediction.toUpperCase()}
-                        </td>
-                        <td style={{ fontWeight: 800 }}>{p.risk_score !== null ? `${p.risk_score}%` : "—"}</td>
-                        <td><span className="status-badge-active">{p.status}</span></td>
+                <div className="clinical-table-container">
+                  <table className="clinical-table">
+                    <thead>
+                      <tr>
+                        <th>Patient MRN</th>
+                        <th>Patient Name</th>
+                        <th>Age / Gender</th>
+                        <th>Latest Diagnosis</th>
+                        <th>Risk Score</th>
+                        <th>Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {doctorDetails?.assigned_patients?.map((p: any) => {
+                        const isCkd = p.latest_prediction === "ckd";
+                        return (
+                          <tr key={p.patient_id}>
+                            <td style={{ fontWeight: 700, color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                              {p.patient_id}
+                            </td>
+                            <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>{p.full_name}</td>
+                            <td style={{ color: "var(--text-secondary)" }}>{p.age} yrs &bull; {p.gender}</td>
+                            <td>
+                              <span className={`badge-clinical ${isCkd ? "badge-clinical--high" : "badge-clinical--low"}`}>
+                                {p.latest_prediction.toUpperCase()}
+                              </span>
+                            </td>
+                            <td style={{ fontWeight: 600, fontFamily: "JetBrains Mono, monospace" }}>
+                              {p.risk_score !== null ? `${Number(p.risk_score).toFixed(1)}%` : "—"}
+                            </td>
+                            <td>
+                              <span className="badge-clinical badge-clinical--low">{p.status}</span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>
@@ -543,16 +439,20 @@ export default function AdminDashboard({ token }: Props) {
 
         {/* ── B. PATIENTS DIRECTORY (1 ROW PER PATIENT -> CLICK ROW FOR DETAILS) ── */}
         {activeSideNav === "patients" && !selectedPatientId && (
-          <div className="admin-white-card">
-            <h2 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", margin: "0 0 6px 0" }}>
-              Hospital Master Patient Directory
-            </h2>
-            <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "0 0 20px 0" }}>
-              Comprehensive patient registry. <strong>Click any patient row</strong> to inspect clinical records and manage attending physician assignments.
-            </p>
+          <div className="clinical-panel">
+            <div className="clinical-panel-header">
+              <div>
+                <h2 className="panel-title">
+                  Hospital Master Patient Directory
+                </h2>
+                <p className="panel-description">
+                  Comprehensive patient registry. Click any patient row to inspect records and manage physician assignments.
+                </p>
+              </div>
+            </div>
 
-            <div style={{ overflowX: "auto" }}>
-              <table className="admin-table">
+            <div className="clinical-table-container">
+              <table className="clinical-table">
                 <thead>
                   <tr>
                     <th>Patient MRN / ID</th>
@@ -571,32 +471,28 @@ export default function AdminDashboard({ token }: Props) {
                       onClick={() => handleSelectPatientRow(p.patient_id)}
                       className="clickable-row"
                     >
-                      <td style={{ fontWeight: 800, color: "#0284c7" }}>{p.patient_id}</td>
-                      <td style={{ fontWeight: 700, color: "#0f172a" }}>{p.full_name}</td>
-                      <td>{p.age ? `${p.age} yrs` : "—"} &bull; {p.gender}</td>
-                      <td style={{ fontWeight: 600, color: "#0369a1" }}>
+                      <td style={{ fontWeight: 700, color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                        {p.patient_id}
+                      </td>
+                      <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>{p.full_name}</td>
+                      <td style={{ color: "var(--text-secondary)" }}>{p.age ? `${p.age} yrs` : "—"} &bull; {p.gender}</td>
+                      <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>
                         {p.assigned_doctor_name || "Unassigned"}
                       </td>
-                      <td style={{ color: "#64748b", fontSize: "0.82rem" }}>
+                      <td style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>
                         {p.registration_date ? new Date(p.registration_date).toLocaleDateString() : "—"}
                       </td>
-                      <td><span className="status-badge-active">{p.status}</span></td>
+                      <td>
+                        <span className="badge-clinical badge-clinical--low">{p.status}</span>
+                      </td>
                       <td>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSelectPatientRow(p.patient_id);
                           }}
-                          style={{
-                            background: "#0284c7",
-                            color: "#ffffff",
-                            border: "none",
-                            padding: "6px 14px",
-                            borderRadius: "8px",
-                            fontSize: "0.78rem",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                          }}
+                          className="btn-secondary"
+                          style={{ fontSize: "0.78rem", padding: "5px 12px" }}
                         >
                           View Details &rarr;
                         </button>
@@ -612,31 +508,22 @@ export default function AdminDashboard({ token }: Props) {
         {/* ── PATIENT DETAILS VIEW (WHEN A PATIENT ROW IS CLICKED) ── */}
         {activeSideNav === "patients" && selectedPatientId && (
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            <div className="admin-white-card">
+            <div className="clinical-panel">
               <button
                 onClick={() => setSelectedPatientId(null)}
-                style={{
-                  background: "#f1f5f9",
-                  border: "1px solid #cbd5e1",
-                  padding: "6px 14px",
-                  borderRadius: "8px",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  color: "#334155",
-                  cursor: "pointer",
-                  marginBottom: "12px",
-                }}
+                className="btn-secondary"
+                style={{ marginBottom: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
               >
                 &larr; Back to Patient Directory
               </button>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
                 <div>
-                  <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>
+                  <h2 style={{ fontSize: "1.45rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
                     {patientDetails?.profile?.full_name || selectedPatientId}
                   </h2>
-                  <div style={{ fontSize: "0.85rem", color: "#64748b", marginTop: "4px" }}>
-                    MRN: <strong>{selectedPatientId}</strong> &bull; Attending Physician: <strong>{patientDetails?.profile?.assigned_doctor_name || "Unassigned"}</strong>
+                  <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px" }}>
+                    MRN: <strong style={{ color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>{selectedPatientId}</strong> &bull; Attending Physician: <strong style={{ color: "var(--text-primary)" }}>{patientDetails?.profile?.assigned_doctor_name || "Unassigned"}</strong>
                   </div>
                 </div>
 
@@ -645,7 +532,8 @@ export default function AdminDashboard({ token }: Props) {
                   <select
                     value={reassignDocId}
                     onChange={(e) => setReassignDocId(e.target.value)}
-                    style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid #cbd5e1", fontSize: "0.85rem" }}
+                    className="clinical-input"
+                    style={{ width: "200px" }}
                   >
                     <option value="">-- Assign Doctor --</option>
                     {doctors.map((d) => (
@@ -654,15 +542,7 @@ export default function AdminDashboard({ token }: Props) {
                   </select>
                   <button
                     type="submit"
-                    style={{
-                      background: "#0284c7",
-                      color: "#ffffff",
-                      border: "none",
-                      padding: "8px 16px",
-                      borderRadius: "8px",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                    }}
+                    className="btn-primary-teal"
                   >
                     Assign Physician
                   </button>
@@ -671,35 +551,43 @@ export default function AdminDashboard({ token }: Props) {
             </div>
 
             {/* Test Results and Predictions for this Patient */}
-            <div className="admin-white-card">
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, marginBottom: "14px" }}>Laboratory Tests & Biomarkers</h3>
+            <div className="clinical-panel">
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "14px" }}>
+                Laboratory Tests & Standardized Biomarkers
+              </h3>
               {patientDetails?.lab_results?.length === 0 ? (
-                <p style={{ color: "#64748b" }}>No laboratory records found for this patient.</p>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>No laboratory records found for this patient.</p>
               ) : (
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Biomarker Test</th>
-                      <th>Category</th>
-                      <th>Measured Value</th>
-                      <th>Reference Range</th>
-                      <th>Status</th>
-                      <th>Recorded At</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {patientDetails?.lab_results?.map((t: any) => (
-                      <tr key={t.id}>
-                        <td style={{ fontWeight: 700 }}>{t.test_name}</td>
-                        <td>{t.category}</td>
-                        <td style={{ fontWeight: 800 }}>{t.test_value} {t.unit}</td>
-                        <td>{t.reference_range}</td>
-                        <td><span className="status-badge-active">{t.status}</span></td>
-                        <td style={{ fontSize: "0.8rem", color: "#64748b" }}>{new Date(t.recorded_at).toLocaleString()}</td>
+                <div className="clinical-table-container">
+                  <table className="clinical-table">
+                    <thead>
+                      <tr>
+                        <th>Biomarker Test</th>
+                        <th>Category</th>
+                        <th>Measured Value</th>
+                        <th>Reference Range</th>
+                        <th>Status</th>
+                        <th>Recorded At</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {patientDetails?.lab_results?.map((t: any) => (
+                        <tr key={t.id}>
+                          <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>{t.test_name}</td>
+                          <td style={{ color: "var(--text-muted)" }}>{t.category}</td>
+                          <td style={{ fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--text-primary)" }}>
+                            {t.test_value} {t.unit}
+                          </td>
+                          <td style={{ color: "var(--text-muted)" }}>{t.reference_range}</td>
+                          <td>
+                            <span className="badge-clinical badge-clinical--low">{t.status}</span>
+                          </td>
+                          <td style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{new Date(t.recorded_at).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>
@@ -709,46 +597,119 @@ export default function AdminDashboard({ token }: Props) {
         {activeSideNav === "overview" && stats && (
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
-              <div className="admin-white-card">
-                <div style={{ fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>Total Doctors</div>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#0284c7", marginTop: "4px" }}>{stats.stats.total_doctors}</div>
+              <div className="clinical-panel">
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.04em" }}>
+                  Total Doctors
+                </div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--color-primary-accent)", marginTop: "4px" }}>
+                  {stats.stats.total_doctors}
+                </div>
               </div>
-              <div className="admin-white-card">
-                <div style={{ fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>Total Patients</div>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#059669", marginTop: "4px" }}>{stats.stats.total_patients}</div>
+              <div className="clinical-panel">
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.04em" }}>
+                  Total Patients
+                </div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--risk-low)", marginTop: "4px" }}>
+                  {stats.stats.total_patients}
+                </div>
               </div>
-              <div className="admin-white-card">
-                <div style={{ fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>Lab Technicians</div>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#d97706", marginTop: "4px" }}>{stats.stats.total_lab_technicians}</div>
+              <div className="clinical-panel">
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.04em" }}>
+                  Lab Technicians
+                </div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--text-primary)", marginTop: "4px" }}>
+                  {stats.stats.total_lab_technicians}
+                </div>
               </div>
-              <div className="admin-white-card">
-                <div style={{ fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>Active Users</div>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#4f46e5", marginTop: "4px" }}>{stats.stats.active_users}</div>
+              <div className="clinical-panel">
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.04em" }}>
+                  Active Users
+                </div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--text-primary)", marginTop: "4px" }}>
+                  {stats.stats.active_users}
+                </div>
               </div>
             </div>
 
-            <div className="admin-white-card">
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, marginBottom: "14px" }}>Recent Security & Activity Trail</h3>
-              <table className="admin-table">
+            <div className="clinical-panel">
+              <h3 className="panel-title" style={{ fontSize: "1.1rem", marginBottom: "14px" }}>
+                Recent Security & Activity Trail
+              </h3>
+              <div className="clinical-table-container">
+                <table className="clinical-table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Role</th>
+                      <th>Action</th>
+                      <th>Resource</th>
+                      <th>Details</th>
+                      <th>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stats.recent_activities?.map((a: any) => (
+                      <tr key={a.id}>
+                        <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>{a.user_email}</td>
+                        <td>
+                          <span className="badge-clinical badge-clinical--neutral">{a.role}</span>
+                        </td>
+                        <td style={{ fontWeight: 600 }}>{a.action}</td>
+                        <td style={{ color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                          {a.resource || "—"}
+                        </td>
+                        <td style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>{a.details}</td>
+                        <td style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>{new Date(a.timestamp).toLocaleString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── D. LAB TECHNICIANS ── */}
+        {activeSideNav === "techs" && (
+          <div className="clinical-panel">
+            <h2 className="panel-title" style={{ marginBottom: "16px" }}>
+              Laboratory Staff Roster
+            </h2>
+            <div className="clinical-table-container">
+              <table className="clinical-table">
                 <thead>
                   <tr>
-                    <th>User</th>
+                    <th>Staff ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
                     <th>Role</th>
                     <th>Action</th>
-                    <th>Resource</th>
-                    <th>Details</th>
-                    <th>Timestamp</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {stats.recent_activities?.map((a: any) => (
-                    <tr key={a.id}>
-                      <td style={{ fontWeight: 700 }}>{a.user_email}</td>
-                      <td><span className="status-badge-active">{a.role}</span></td>
-                      <td style={{ fontWeight: 600 }}>{a.action}</td>
-                      <td style={{ color: "#0284c7" }}>{a.resource || "—"}</td>
-                      <td style={{ fontSize: "0.82rem", color: "#475569" }}>{a.details}</td>
-                      <td style={{ fontSize: "0.78rem", color: "#64748b" }}>{new Date(a.timestamp).toLocaleString()}</td>
+                  {techs.map((t) => (
+                    <tr key={t.id}>
+                      <td style={{ fontWeight: 700, color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                        #{t.id}
+                      </td>
+                      <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>{t.full_name}</td>
+                      <td style={{ color: "var(--text-secondary)" }}>{t.email}</td>
+                      <td>
+                        <span className={`badge-clinical ${t.is_active ? "badge-clinical--low" : "badge-clinical--high"}`}>
+                          {t.account_status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td style={{ color: "var(--text-muted)" }}>{t.role}</td>
+                      <td>
+                        <button
+                          onClick={() => handleToggleDoctorStatus(t.id, t.is_active)}
+                          className="btn-secondary"
+                          style={{ fontSize: "0.78rem", padding: "4px 10px" }}
+                        >
+                          {t.is_active ? "Deactivate" : "Activate"}
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -757,83 +718,35 @@ export default function AdminDashboard({ token }: Props) {
           </div>
         )}
 
-        {/* ── D. LAB TECHNICIANS ── */}
-        {activeSideNav === "techs" && (
-          <div className="admin-white-card">
-            <h2 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", marginBottom: "16px" }}>
-              Laboratory Staff Roster
-            </h2>
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Staff ID</th>
-                  <th>Full Name</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Role</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {techs.map((t) => (
-                  <tr key={t.id}>
-                    <td style={{ fontWeight: 800, color: "#0284c7" }}>#{t.id}</td>
-                    <td style={{ fontWeight: 700 }}>{t.full_name}</td>
-                    <td>{t.email}</td>
-                    <td><span className={t.is_active ? "status-badge-active" : "status-badge-deact"}>{t.account_status.toUpperCase()}</span></td>
-                    <td>{t.role}</td>
-                    <td>
-                      <button
-                        onClick={() => handleToggleDoctorStatus(t.id, t.is_active)}
-                        style={{
-                          background: t.is_active ? "#fee2e2" : "#dcfce7",
-                          color: t.is_active ? "#991b1b" : "#166534",
-                          border: "none",
-                          padding: "6px 12px",
-                          borderRadius: "8px",
-                          fontSize: "0.78rem",
-                          fontWeight: 700,
-                          cursor: "pointer",
-                        }}
-                      >
-                        {t.is_active ? "Deactivate" : "Activate"}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
         {/* ── E. INVITE STAFF ── */}
         {activeSideNav === "invite" && (
-          <div className="admin-white-card" style={{ maxWidth: "600px" }}>
-            <h2 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", marginBottom: "6px" }}>
+          <div className="clinical-panel" style={{ maxWidth: "560px" }}>
+            <h2 className="panel-title" style={{ marginBottom: "4px" }}>
               Invite Authorized Clinical Staff
             </h2>
-            <p style={{ fontSize: "0.85rem", color: "#64748b", marginBottom: "20px" }}>
+            <p className="panel-description" style={{ marginBottom: "20px" }}>
               Provision an official Doctor or Laboratory Technician account. A one-time, 48-hour secure setup link will be generated.
             </p>
 
             {inviteError && (
-              <div style={{ background: "#fee2e2", color: "#991b1b", padding: "12px", borderRadius: "8px", marginBottom: "16px", fontWeight: 600 }}>
-                ⚠️ {inviteError}
+              <div style={{ background: "var(--risk-high-bg)", color: "var(--risk-high)", border: "1px solid var(--risk-high-border)", padding: "10px 14px", borderRadius: "6px", marginBottom: "16px", fontWeight: 600, fontSize: "0.85rem" }}>
+                {inviteError}
               </div>
             )}
             {inviteResult && (
-              <div style={{ background: "#dcfce7", color: "#166534", padding: "16px", borderRadius: "10px", marginBottom: "20px" }}>
-                <div style={{ fontWeight: 800, fontSize: "0.95rem" }}>✅ Invitation Successfully Generated!</div>
-                <div style={{ fontSize: "0.85rem", marginTop: "6px" }}>
+              <div style={{ background: "var(--risk-low-bg)", color: "var(--risk-low)", border: "1px solid var(--risk-low-border)", padding: "14px", borderRadius: "6px", marginBottom: "20px" }}>
+                <div style={{ fontWeight: 700, fontSize: "0.9rem" }}>Invitation Successfully Generated</div>
+                <div style={{ fontSize: "0.82rem", marginTop: "4px", color: "var(--text-primary)" }}>
                   Staff: <strong>{inviteResult.full_name}</strong> ({inviteResult.email}) &bull; Role: <strong>{inviteResult.role}</strong>
                 </div>
                 <div style={{ marginTop: "10px" }}>
-                  <label style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase" }}>One-Time Password Setup Link:</label>
+                  <label style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--text-muted)" }}>One-Time Password Setup Link:</label>
                   <input
                     type="text"
                     readOnly
                     value={inviteResult.invitation_link}
-                    style={{ width: "100%", padding: "8px", borderRadius: "6px", border: "1px solid #86efac", background: "#f0fdf4", fontSize: "0.82rem", marginTop: "4px" }}
+                    className="clinical-input"
+                    style={{ fontSize: "0.8rem", marginTop: "4px", fontFamily: "JetBrains Mono, monospace" }}
                   />
                 </div>
               </div>
@@ -841,35 +754,35 @@ export default function AdminDashboard({ token }: Props) {
 
             <form onSubmit={handleInviteSubmit}>
               <div style={{ marginBottom: "14px" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, marginBottom: "4px" }}>Full Legal Name:</label>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>Full Legal Name:</label>
                 <input
                   type="text"
                   placeholder="e.g. Dr. Arthur Pendelton"
                   value={inviteName}
                   onChange={(e) => setInviteName(e.target.value)}
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                  className="clinical-input"
                   required
                 />
               </div>
 
               <div style={{ marginBottom: "14px" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, marginBottom: "4px" }}>Official Email Address:</label>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>Official Email Address:</label>
                 <input
                   type="email"
-                  placeholder="e.g. arthur.p@metrohealth.org"
+                  placeholder="e.g. doctor@hospital.org"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                  className="clinical-input"
                   required
                 />
               </div>
 
               <div style={{ marginBottom: "14px" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, marginBottom: "4px" }}>Assigned Role:</label>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>Assigned Role:</label>
                 <select
                   value={inviteRole}
                   onChange={(e: any) => setInviteRole(e.target.value)}
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                  className="clinical-input"
                 >
                   <option value="doctor">Doctor / Physician</option>
                   <option value="lab_technician">Laboratory Technician</option>
@@ -877,29 +790,21 @@ export default function AdminDashboard({ token }: Props) {
               </div>
 
               <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, marginBottom: "4px" }}>Medical Specialization (Optional):</label>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>Medical Specialization (Optional):</label>
                 <input
                   type="text"
-                  placeholder="e.g. Nephrology & Renal Care"
+                  placeholder="e.g. Renal & Kidney Care"
                   value={inviteSpecialization}
                   onChange={(e) => setInviteSpecialization(e.target.value)}
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                  className="clinical-input"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={inviteLoading}
-                style={{
-                  background: "#0284c7",
-                  color: "#ffffff",
-                  border: "none",
-                  padding: "12px 24px",
-                  borderRadius: "10px",
-                  fontWeight: 700,
-                  fontSize: "0.95rem",
-                  cursor: "pointer",
-                }}
+                className="btn-primary-teal"
+                style={{ width: "100%", padding: "10px" }}
               >
                 {inviteLoading ? "Generating Invitation..." : "Send Staff Invitation Link"}
               </button>
@@ -909,41 +814,51 @@ export default function AdminDashboard({ token }: Props) {
 
         {/* ── F. FEDERATED LEARNING ── */}
         {activeSideNav === "federated" && (
-          <FederatedDashboard token={token} />
+          <div className="clinical-panel">
+            <FederatedDashboard token={token} />
+          </div>
         )}
 
         {/* ── G. AUDIT LOGS ── */}
         {activeSideNav === "audit" && (
-          <div className="admin-white-card">
-            <h2 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", marginBottom: "16px" }}>
+          <div className="clinical-panel">
+            <h2 className="panel-title" style={{ marginBottom: "16px" }}>
               Hospital Security & Cryptographic Audit Logs
             </h2>
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Log ID</th>
-                  <th>User Identity</th>
-                  <th>Role</th>
-                  <th>Action</th>
-                  <th>Target Resource</th>
-                  <th>Details</th>
-                  <th>Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {auditLogs.map((log) => (
-                  <tr key={log.id}>
-                    <td style={{ fontWeight: 800, color: "#0284c7" }}>#{log.id}</td>
-                    <td style={{ fontWeight: 700 }}>{log.user_email || "System"}</td>
-                    <td><span className="status-badge-active">{log.role}</span></td>
-                    <td style={{ fontWeight: 600 }}>{log.action}</td>
-                    <td style={{ color: "#0284c7" }}>{log.resource || "—"}</td>
-                    <td style={{ fontSize: "0.82rem", color: "#475569" }}>{log.details}</td>
-                    <td style={{ fontSize: "0.78rem", color: "#64748b" }}>{new Date(log.timestamp).toLocaleString()}</td>
+            <div className="clinical-table-container">
+              <table className="clinical-table">
+                <thead>
+                  <tr>
+                    <th>Log ID</th>
+                    <th>User Identity</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                    <th>Target Resource</th>
+                    <th>Details</th>
+                    <th>Timestamp</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {auditLogs.map((log) => (
+                    <tr key={log.id}>
+                      <td style={{ fontWeight: 700, color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                        #{log.id}
+                      </td>
+                      <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>{log.user_email || "System"}</td>
+                      <td>
+                        <span className="badge-clinical badge-clinical--neutral">{log.role}</span>
+                      </td>
+                      <td style={{ fontWeight: 600 }}>{log.action}</td>
+                      <td style={{ color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                        {log.resource || "—"}
+                      </td>
+                      <td style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>{log.details}</td>
+                      <td style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>{new Date(log.timestamp).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -951,4 +866,3 @@ export default function AdminDashboard({ token }: Props) {
     </div>
   );
 }
-

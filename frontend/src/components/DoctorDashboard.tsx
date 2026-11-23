@@ -10,8 +10,17 @@ type Props = {
   doctorProfile?: any;
 };
 
+// Helper for professional clinical formatting (fixes raw 16-decimal floats)
+function formatRiskScore(score: any): string {
+  if (score === null || score === undefined || score === "") return "—";
+  const num = typeof score === "number" ? score : parseFloat(score);
+  if (isNaN(num)) return "—";
+  if (num > 0 && num < 0.1) return "<0.1%";
+  return `${num.toFixed(1)}%`;
+}
+
 export default function DoctorDashboard({ token, doctorProfile }: Props) {
-  const [activeSideNav, setActiveSideNav] = useState<"overview" | "patients" | "assessment" | "ehr" | "lab_request">("patients");
+  const [activeSideNav, setActiveSideNav] = useState<"overview" | "patients" | "assessment" | "ehr">("patients");
   const [patients, setPatients] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -117,7 +126,7 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
         }),
       });
       if (res.ok) {
-        setLabSuccess(`Laboratory test '${labTestType}' requested for ${selectedPatientId}!`);
+        setLabSuccess(`Laboratory test '${labTestType}' requested for ${selectedPatientId}`);
         setLabNotes("");
         handleSelectPatientRow(selectedPatientId);
       }
@@ -135,199 +144,92 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
   });
 
   return (
-    <div style={{ display: "flex", gap: "24px", minHeight: "82vh", maxWidth: "1500px", margin: "0 auto" }}>
-      <style>{`
-        /* ── Sidepanel Styles ── */
-        .doctor-sidepanel {
-          width: 260px;
-          flex-shrink: 0;
-          background: #ffffff;
-          border-radius: 18px;
-          border: 1px solid #e2e8f0;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-          padding: 20px 14px;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          height: fit-content;
-        }
-        .sidepanel-brand {
-          padding: 12px 14px;
-          margin-bottom: 12px;
-          border-bottom: 1px solid #f1f5f9;
-        }
-        .sidepanel-item {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 16px;
-          border-radius: 12px;
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #475569;
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s;
-          text-align: left;
-          width: 100%;
-        }
-        .sidepanel-item:hover {
-          background: #f0f9ff;
-          color: #0284c7;
-        }
-        .sidepanel-item--active {
-          background: linear-gradient(135deg, #0284c7, #0369a1);
-          color: #ffffff !important;
-          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
-        }
-        
-        /* ── Main Dashboard Content Area ── */
-        .doctor-main-content {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          min-width: 0;
-        }
-        .white-card {
-          background: #ffffff;
-          border-radius: 18px;
-          border: 1px solid #e2e8f0;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-          padding: 24px;
-          color: #0f172a;
-        }
-        .clickable-table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 0.88rem;
-        }
-        .clickable-table th {
-          text-align: left;
-          padding: 14px 16px;
-          background: #f8fafc;
-          color: #475569;
-          font-weight: 700;
-          border-bottom: 2px solid #e2e8f0;
-          font-size: 0.8rem;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-        .clickable-table td {
-          padding: 14px 16px;
-          border-bottom: 1px solid #f1f5f9;
-          color: #1e293b;
-          vertical-align: middle;
-        }
-        .clickable-row {
-          cursor: pointer;
-          transition: background 0.15s ease;
-        }
-        .clickable-row:hover {
-          background: #f0f9ff !important;
-        }
-        .badge-chip {
-          display: inline-block;
-          padding: 4px 10px;
-          border-radius: 50px;
-          font-size: 0.72rem;
-          font-weight: 800;
-        }
-        .badge-chip--CKD { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-        .badge-chip--NOTCKD { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-        .badge-chip--NONE { background: #f1f5f9; color: #64748b; }
-      `}</style>
-
-      {/* ── 1. LEFT SIDEPANEL ── */}
-      <aside className="doctor-sidepanel">
-        <div className="sidepanel-brand">
-          <div style={{ fontSize: "0.75rem", fontWeight: 800, color: "#0284c7", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+    <div className="clinical-shell-container">
+      {/* ── 1. LEFT SIDEPANEL: EXTENDS FLUSH TO FOOTER (NO FLOATING CARD) ── */}
+      <aside className="clinical-sidebar">
+        <div className="sidebar-brand-block">
+          <div className="sidebar-brand-tag">
             Physician Workspace
           </div>
-          <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a", marginTop: "2px" }}>
-            {doctorProfile?.full_name || "Dr. Attending Nephrologist"}
+          <div className="sidebar-brand-name">
+            {doctorProfile?.full_name || "Dr. Attending Physician"}
           </div>
-          <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: "2px" }}>
-            Nephrology & Renal Dialysis Unit
+          <div className="sidebar-brand-dept">
+            Renal Care & Dialysis Unit
           </div>
         </div>
 
         <button
           onClick={() => { setActiveSideNav("patients"); setSelectedPatientId(null); }}
-          className={`sidepanel-item ${activeSideNav === "patients" ? "sidepanel-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "patients" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>👥</span>
+          <span style={{ fontSize: "1rem" }}>👥</span>
           <span>My Patients ({patients.length})</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("overview")}
-          className={`sidepanel-item ${activeSideNav === "overview" ? "sidepanel-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "overview" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>📊</span>
+          <span style={{ fontSize: "1rem" }}>📊</span>
           <span>Overview Analytics</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("assessment")}
-          className={`sidepanel-item ${activeSideNav === "assessment" ? "sidepanel-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "assessment" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>📋</span>
+          <span style={{ fontSize: "1rem" }}>📋</span>
           <span>New Clinical Intake</span>
         </button>
 
         <button
           onClick={() => setActiveSideNav("ehr")}
-          className={`sidepanel-item ${activeSideNav === "ehr" ? "sidepanel-item--active" : ""}`}
+          className={`sidebar-nav-item ${activeSideNav === "ehr" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span>📈</span>
+          <span style={{ fontSize: "1rem" }}>📈</span>
           <span>Longitudinal eGFR Chart</span>
         </button>
       </aside>
 
-      {/* ── 2. MAIN DASHBOARD CONTENT ── */}
-      <div className="doctor-main-content">
+      {/* ── 2. FLUID CLINICAL CONTENT AREA ── */}
+      <div className="clinical-content-area">
         
         {/* ── A. PATIENTS DIRECTORY (1 ROW PER UNIQUE PATIENT) ── */}
         {activeSideNav === "patients" && !selectedPatientId && (
-          <div className="white-card">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
+          <div className="clinical-panel">
+            <div className="clinical-panel-header">
               <div>
-                <h2 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>
+                <h2 className="panel-title">
                   Assigned Patients Clinical Directory
                 </h2>
-                <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "4px 0 0 0" }}>
-                  Each patient is deduplicated to exactly one row. Click any patient row to open their full clinical dossier, laboratory results, and AI models.
+                <p className="panel-description">
+                  Each patient is deduplicated to exactly one row. Click any row to inspect their full clinical dossier, laboratory results, and AI models.
                 </p>
               </div>
 
-              {/* Search Bar */}
+              {/* Clean Clinical Search Input */}
               <input
                 type="text"
-                placeholder="🔍 Search by MRN or Patient Name..."
+                placeholder="Search by MRN or Patient Name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  padding: "10px 16px",
-                  borderRadius: "10px",
-                  border: "1.5px solid #cbd5e1",
-                  fontSize: "0.88rem",
-                  width: "280px",
-                  outline: "none",
-                }}
+                className="clinical-input"
+                style={{ width: "260px" }}
               />
             </div>
 
             {loading ? (
-              <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>Loading patients roster...</div>
+              <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>
+                Loading patients roster...
+              </div>
             ) : filteredPatients.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
+              <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>
                 No assigned patients matching your query.
               </div>
             ) : (
-              <div style={{ overflowX: "auto" }}>
-                <table className="clickable-table">
+              <div className="clinical-table-container">
+                <table className="clinical-table">
                   <thead>
                     <tr>
                       <th>Patient MRN / ID</th>
@@ -340,50 +242,54 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPatients.map((p) => (
-                      <tr
-                        key={p.patient_id}
-                        onClick={() => handleSelectPatientRow(p.patient_id)}
-                        className="clickable-row"
-                      >
-                        <td style={{ fontWeight: 800, color: "#0284c7" }}>{p.patient_id}</td>
-                        <td style={{ fontWeight: 700, color: "#0f172a" }}>{p.full_name}</td>
-                        <td style={{ color: "#475569" }}>
-                          {p.age ? `${p.age} yrs` : "—"} &bull; {p.gender || "Unknown"}
-                        </td>
-                        <td style={{ fontSize: "0.82rem", color: "#64748b" }}>
-                          {p.last_measurement_date ? new Date(p.last_measurement_date).toLocaleDateString() : "No visits recorded"}
-                        </td>
-                        <td>
-                          <span className={`badge-chip ${p.latest_prediction_status === "ckd" ? "badge-chip--CKD" : p.latest_prediction_status === "notckd" ? "badge-chip--NOTCKD" : "badge-chip--NONE"}`}>
-                            {p.latest_prediction_status ? p.latest_prediction_status.toUpperCase() : "NOT EVALUATED"}
-                          </span>
-                        </td>
-                        <td style={{ fontWeight: 800, color: p.latest_risk_score && p.latest_risk_score >= 50 ? "#dc2626" : "#0f172a" }}>
-                          {p.latest_risk_score !== null && p.latest_risk_score !== undefined ? `${p.latest_risk_score}%` : "—"}
-                        </td>
-                        <td>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSelectPatientRow(p.patient_id);
-                            }}
-                            style={{
-                              background: "#0284c7",
-                              color: "#ffffff",
-                              border: "none",
-                              padding: "6px 14px",
-                              borderRadius: "8px",
-                              fontSize: "0.78rem",
-                              fontWeight: 700,
-                              cursor: "pointer",
-                            }}
-                          >
-                            View Details &rarr;
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredPatients.map((p) => {
+                      const isCkd = p.latest_prediction_status === "ckd";
+                      const isNotCkd = p.latest_prediction_status === "notckd";
+                      return (
+                        <tr
+                          key={p.patient_id}
+                          onClick={() => handleSelectPatientRow(p.patient_id)}
+                          className="clickable-row"
+                        >
+                          <td style={{ fontWeight: 700, color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                            {p.patient_id}
+                          </td>
+                          <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>
+                            {p.full_name}
+                          </td>
+                          <td style={{ color: "var(--text-secondary)" }}>
+                            {p.age ? `${p.age} yrs` : "—"} &bull; {p.gender || "Unknown"}
+                          </td>
+                          <td style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
+                            {p.last_measurement_date ? new Date(p.last_measurement_date).toLocaleDateString() : "No visits recorded"}
+                          </td>
+                          <td>
+                            <span className={`badge-clinical ${isCkd ? "badge-clinical--high" : isNotCkd ? "badge-clinical--low" : "badge-clinical--neutral"}`}>
+                              {p.latest_prediction_status ? p.latest_prediction_status.toUpperCase() : "NOT EVALUATED"}
+                            </span>
+                          </td>
+                          <td style={{
+                            fontWeight: 600,
+                            fontFamily: "JetBrains Mono, monospace",
+                            color: p.latest_risk_score && p.latest_risk_score >= 50 ? "var(--risk-high)" : "var(--risk-low)"
+                          }}>
+                            {formatRiskScore(p.latest_risk_score)}
+                          </td>
+                          <td>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectPatientRow(p.patient_id);
+                              }}
+                              className="btn-secondary"
+                              style={{ fontSize: "0.78rem", padding: "5px 12px" }}
+                            >
+                              View Details &rarr;
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -396,35 +302,35 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             
             {/* Header & Back Button */}
-            <div className="white-card">
+            <div className="clinical-panel">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
                 <div>
                   <button
                     onClick={() => setSelectedPatientId(null)}
-                    style={{
-                      background: "#f1f5f9",
-                      border: "1px solid #cbd5e1",
-                      padding: "6px 14px",
-                      borderRadius: "8px",
-                      fontSize: "0.82rem",
-                      fontWeight: 700,
-                      color: "#334155",
-                      cursor: "pointer",
-                      marginBottom: "10px",
-                    }}
+                    className="btn-secondary"
+                    style={{ marginBottom: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
                   >
                     &larr; Back to Patients List
                   </button>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>
+                    <h2 style={{ fontSize: "1.45rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
                       {patientDetails?.profile?.full_name || `Patient ${selectedPatientId}`}
                     </h2>
-                    <span style={{ background: "#e0f2fe", color: "#0369a1", padding: "4px 10px", borderRadius: "8px", fontSize: "0.82rem", fontWeight: 800 }}>
+                    <span style={{
+                      background: "var(--color-primary-subtle)",
+                      color: "var(--color-primary-accent)",
+                      border: "1px solid var(--color-primary-border)",
+                      padding: "3px 8px",
+                      borderRadius: "4px",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      fontFamily: "JetBrains Mono, monospace"
+                    }}>
                       MRN: {selectedPatientId}
                     </span>
                   </div>
-                  <div style={{ fontSize: "0.82rem", color: "#64748b", marginTop: "4px" }}>
-                    Assigned Doctor: <strong>{patientDetails?.profile?.assigned_doctor_name || "Dr. Attending"}</strong> &bull; Blood Group: <strong>{patientDetails?.profile?.blood_group || "O+"}</strong> &bull; Status: <strong style={{ color: "#059669" }}>{patientDetails?.profile?.status || "Active"}</strong>
+                  <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px" }}>
+                    Assigned Physician: <strong style={{ color: "var(--text-primary)" }}>{patientDetails?.profile?.assigned_doctor_name || "Dr. Attending"}</strong> &bull; Blood Group: <strong>{patientDetails?.profile?.blood_group || "O+"}</strong> &bull; Status: <strong style={{ color: "var(--risk-low)" }}>{patientDetails?.profile?.status || "Active"}</strong>
                   </div>
                 </div>
 
@@ -432,141 +338,176 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                   <button
                     onClick={() => handleExportFhir(selectedPatientId)}
-                    style={{
-                      background: "linear-gradient(135deg, #059669, #047857)",
-                      color: "#ffffff",
-                      border: "none",
-                      padding: "10px 18px",
-                      borderRadius: "10px",
-                      fontSize: "0.85rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                    }}
+                    className="btn-primary-teal"
                   >
-                    📥 Export FHIR R4 JSON
+                    Export FHIR R4 JSON
                   </button>
                 </div>
               </div>
 
-              {/* Sub-Tabs for Details */}
-              <div style={{ display: "flex", gap: "8px", marginTop: "24px", borderBottom: "2px solid #f1f5f9" }}>
+              {/* Sub-Tabs for Details (Touch-friendly & Horizontal Scrolling on Mobile) */}
+              <div style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "20px",
+                borderBottom: "1px solid var(--border-color)",
+                overflowX: "auto",
+                whiteSpace: "nowrap",
+                WebkitOverflowScrolling: "touch",
+                paddingBottom: "2px"
+              }}>
                 <button
                   onClick={() => setActiveDetailTab("labs")}
                   style={{
-                    padding: "10px 18px",
+                    padding: "9px 16px",
                     border: "none",
                     background: "none",
-                    fontSize: "0.88rem",
-                    fontWeight: 700,
-                    color: activeDetailTab === "labs" ? "#0284c7" : "#64748b",
-                    borderBottom: activeDetailTab === "labs" ? "3px solid #0284c7" : "none",
+                    fontSize: "0.86rem",
+                    fontWeight: 600,
+                    color: activeDetailTab === "labs" ? "var(--color-primary-accent)" : "var(--text-muted)",
+                    borderBottom: activeDetailTab === "labs" ? "2px solid var(--color-primary-accent)" : "2px solid transparent",
                     cursor: "pointer",
                   }}
                 >
-                  🧪 Laboratory Biomarkers ({patientDetails?.lab_results?.length || 0})
+                  Laboratory Biomarkers ({patientDetails?.lab_results?.length || 0})
                 </button>
                 <button
                   onClick={() => setActiveDetailTab("predictions")}
                   style={{
-                    padding: "10px 18px",
+                    padding: "9px 16px",
                     border: "none",
                     background: "none",
-                    fontSize: "0.88rem",
-                    fontWeight: 700,
-                    color: activeDetailTab === "predictions" ? "#0284c7" : "#64748b",
-                    borderBottom: activeDetailTab === "predictions" ? "3px solid #0284c7" : "none",
+                    fontSize: "0.86rem",
+                    fontWeight: 600,
+                    color: activeDetailTab === "predictions" ? "var(--color-primary-accent)" : "var(--text-muted)",
+                    borderBottom: activeDetailTab === "predictions" ? "2px solid var(--color-primary-accent)" : "2px solid transparent",
                     cursor: "pointer",
                   }}
                 >
-                  🧠 Deep Learning Predictions ({patientDetails?.predictions?.length || 0})
+                  Deep Learning Predictions ({patientDetails?.predictions?.length || 0})
                 </button>
                 <button
                   onClick={() => setActiveDetailTab("history")}
                   style={{
-                    padding: "10px 18px",
+                    padding: "9px 16px",
                     border: "none",
                     background: "none",
-                    fontSize: "0.88rem",
-                    fontWeight: 700,
-                    color: activeDetailTab === "history" ? "#0284c7" : "#64748b",
-                    borderBottom: activeDetailTab === "history" ? "3px solid #0284c7" : "none",
+                    fontSize: "0.86rem",
+                    fontWeight: 600,
+                    color: activeDetailTab === "history" ? "var(--color-primary-accent)" : "var(--text-muted)",
+                    borderBottom: activeDetailTab === "history" ? "2px solid var(--color-primary-accent)" : "2px solid transparent",
                     cursor: "pointer",
                   }}
                 >
-                  📋 Medical History & Order Lab Test
+                  Medical Profile & Order Lab
                 </button>
               </div>
             </div>
 
             {/* Sub-Tab 1: Lab Biomarkers */}
             {activeDetailTab === "labs" && (
-              <div className="white-card">
-                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, marginBottom: "16px" }}>Standardized Renal Biomarker Results</h3>
+              <div className="clinical-panel">
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "16px" }}>
+                  Standardized Renal Biomarker Measurements
+                </h3>
                 {patientDetails?.lab_results?.length === 0 ? (
-                  <p style={{ color: "#64748b" }}>No laboratory test measurements recorded yet for this patient.</p>
+                  <p style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>
+                    No laboratory test measurements recorded yet for this patient.
+                  </p>
                 ) : (
-                  <table className="clickable-table">
-                    <thead>
-                      <tr>
-                        <th>Biomarker Test</th>
-                        <th>Category</th>
-                        <th>Measured Value</th>
-                        <th>Standard Reference</th>
-                        <th>LOINC Code</th>
-                        <th>Status</th>
-                        <th>Technician</th>
-                        <th>Recorded At</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {patientDetails?.lab_results?.map((t: any) => (
-                        <tr key={t.id}>
-                          <td style={{ fontWeight: 700 }}>{t.test_name}</td>
-                          <td style={{ color: "#64748b" }}>{t.category}</td>
-                          <td style={{ fontWeight: 800 }}>{t.test_value} {t.unit}</td>
-                          <td style={{ color: "#64748b" }}>{t.reference_range || "—"}</td>
-                          <td style={{ color: "#0284c7", fontWeight: 600 }}>{t.loinc_code || "—"}</td>
-                          <td>
-                            <span className={`badge-chip ${t.status === "CRITICAL" ? "badge-chip--CKD" : t.status === "ELEVATED" ? "badge-chip--CKD" : "badge-chip--NOTCKD"}`}>
-                              {t.status}
-                            </span>
-                          </td>
-                          <td>{t.technician_name || "Lab Staff"}</td>
-                          <td style={{ fontSize: "0.8rem", color: "#64748b" }}>{new Date(t.recorded_at).toLocaleString()}</td>
+                  <div className="clinical-table-container">
+                    <table className="clinical-table">
+                      <thead>
+                        <tr>
+                          <th>Biomarker Test</th>
+                          <th>Category</th>
+                          <th>Measured Value</th>
+                          <th>Standard Reference</th>
+                          <th>LOINC Code</th>
+                          <th>Status</th>
+                          <th>Technician</th>
+                          <th>Recorded At</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {patientDetails?.lab_results?.map((t: any) => {
+                          const isCritical = t.status === "CRITICAL" || t.status === "ELEVATED";
+                          return (
+                            <tr key={t.id}>
+                              <td style={{ fontWeight: 600, color: "var(--text-primary)" }}>{t.test_name}</td>
+                              <td style={{ color: "var(--text-muted)" }}>{t.category}</td>
+                              <td style={{ fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--text-primary)" }}>
+                                {t.test_value} {t.unit}
+                              </td>
+                              <td style={{ color: "var(--text-muted)" }}>{t.reference_range || "—"}</td>
+                              <td style={{ color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace", fontWeight: 600 }}>
+                                {t.loinc_code || "—"}
+                              </td>
+                              <td>
+                                <span className={`badge-clinical ${isCritical ? "badge-clinical--high" : "badge-clinical--low"}`}>
+                                  {t.status}
+                                </span>
+                              </td>
+                              <td style={{ color: "var(--text-secondary)" }}>{t.technician_name || "Lab Staff"}</td>
+                              <td style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                                {new Date(t.recorded_at).toLocaleString()}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
             )}
 
             {/* Sub-Tab 2: Deep Learning Predictions */}
             {activeDetailTab === "predictions" && (
-              <div className="white-card">
-                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, marginBottom: "16px" }}>Historical Multi-Model CKD Evaluations</h3>
+              <div className="clinical-panel">
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "16px" }}>
+                  Historical Multi-Model CKD Evaluations
+                </h3>
                 {patientDetails?.predictions?.length === 0 ? (
-                  <p style={{ color: "#64748b" }}>No historical evaluations recorded yet. Run a New Clinical Intake to evaluate.</p>
+                  <p style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>
+                    No historical evaluations recorded yet. Run a New Clinical Intake to evaluate.
+                  </p>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                    {patientDetails?.predictions?.map((pred: any) => (
-                      <div key={pred.id} style={{ background: "#f8fafc", padding: "16px 20px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                    {patientDetails?.predictions?.map((pred: any) => {
+                      const isCkd = pred.prediction_label === "ckd";
+                      return (
+                        <div key={pred.id} style={{
+                          background: "var(--bg-surface-subtle)",
+                          padding: "16px 20px",
+                          borderRadius: "8px",
+                          border: "1px solid var(--border-color)",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center"
+                        }}>
                           <div>
-                            <span style={{ fontSize: "0.8rem", color: "#64748b" }}>{new Date(pred.created_at).toLocaleString()}</span>
-                            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a" }}>
-                              Verdict: <span style={{ color: pred.prediction_label === "ckd" ? "#dc2626" : "#16a34a" }}>{pred.prediction_label.toUpperCase()}</span>
+                            <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                              {new Date(pred.created_at).toLocaleString()}
+                            </span>
+                            <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", marginTop: "2px" }}>
+                              Verdict: <span style={{ color: isCkd ? "var(--risk-high)" : "var(--risk-low)" }}>{pred.prediction_label.toUpperCase()}</span>
                             </div>
                           </div>
                           <div style={{ textAlign: "right" }}>
-                            <div style={{ fontSize: "1.4rem", fontWeight: 800, color: pred.risk_score >= 50 ? "#dc2626" : "#0284c7" }}>
-                              {pred.risk_score}%
+                            <div style={{
+                              fontSize: "1.35rem",
+                              fontWeight: 700,
+                              fontFamily: "JetBrains Mono, monospace",
+                              color: pred.risk_score >= 50 ? "var(--risk-high)" : "var(--risk-low)"
+                            }}>
+                              {formatRiskScore(pred.risk_score)}
                             </div>
-                            <div style={{ fontSize: "0.75rem", color: "#64748b" }}>Diagnostic Risk Probability</div>
+                            <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Risk Probability</div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -574,28 +515,36 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
 
             {/* Sub-Tab 3: Medical History & Order Lab Test */}
             {activeDetailTab === "history" && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                <div className="white-card">
-                  <h3 style={{ fontSize: "1.15rem", fontWeight: 800, marginBottom: "14px" }}>Patient Profile & Clinical Notes</h3>
-                  <p><strong>Medical History:</strong> {patientDetails?.profile?.medical_history || "No documented pre-existing conditions recorded."}</p>
-                  <p><strong>Known Allergies:</strong> {patientDetails?.profile?.allergies || "No known drug allergies (NKDA)."}</p>
-                  <p><strong>Emergency Contact:</strong> {patientDetails?.profile?.emergency_contact || "+1-800-555-0199"}</p>
+              <div className="responsive-two-col">
+                <div className="clinical-panel">
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "14px" }}>
+                    Patient Profile & Clinical Notes
+                  </h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "0.88rem", color: "var(--text-secondary)" }}>
+                    <p><strong style={{ color: "var(--text-primary)" }}>Medical History:</strong> {patientDetails?.profile?.medical_history || "No documented pre-existing conditions recorded."}</p>
+                    <p><strong style={{ color: "var(--text-primary)" }}>Known Allergies:</strong> {patientDetails?.profile?.allergies || "No known drug allergies (NKDA)."}</p>
+                    <p><strong style={{ color: "var(--text-primary)" }}>Emergency Contact:</strong> {patientDetails?.profile?.emergency_contact || "+1-800-555-0199"}</p>
+                  </div>
                 </div>
 
-                <div className="white-card">
-                  <h3 style={{ fontSize: "1.15rem", fontWeight: 800, marginBottom: "14px" }}>Order Laboratory Test</h3>
+                <div className="clinical-panel">
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "14px" }}>
+                    Order Laboratory Test
+                  </h3>
                   {labSuccess && (
-                    <div style={{ background: "#dcfce7", color: "#166534", padding: "10px", borderRadius: "8px", marginBottom: "12px", fontSize: "0.85rem" }}>
-                      ✅ {labSuccess}
+                    <div style={{ background: "var(--risk-low-bg)", color: "var(--risk-low)", border: "1px solid var(--risk-low-border)", padding: "10px", borderRadius: "6px", marginBottom: "12px", fontSize: "0.85rem", fontWeight: 600 }}>
+                      {labSuccess}
                     </div>
                   )}
                   <form onSubmit={handleLabRequestSubmit}>
                     <div style={{ marginBottom: "12px" }}>
-                      <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, marginBottom: "4px" }}>Test Panel:</label>
+                      <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>
+                        Test Panel:
+                      </label>
                       <select
                         value={labTestType}
                         onChange={(e) => setLabTestType(e.target.value)}
-                        style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                        className="clinical-input"
                       >
                         <option value="Comprehensive Renal Panel">Comprehensive Renal Panel (eGFR, Cr, BUN, Na, K)</option>
                         <option value="Serum Creatinine + eGFR">Serum Creatinine + eGFR</option>
@@ -605,11 +554,13 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
                     </div>
 
                     <div style={{ marginBottom: "12px" }}>
-                      <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, marginBottom: "4px" }}>Clinical Priority:</label>
+                      <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>
+                        Clinical Priority:
+                      </label>
                       <select
                         value={labPriority}
                         onChange={(e: any) => setLabPriority(e.target.value)}
-                        style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                        className="clinical-input"
                       >
                         <option value="Routine">Routine</option>
                         <option value="Urgent">Urgent</option>
@@ -618,29 +569,24 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
                     </div>
 
                     <div style={{ marginBottom: "16px" }}>
-                      <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, marginBottom: "4px" }}>Physician Clinical Notes:</label>
+                      <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>
+                        Physician Clinical Notes:
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Rule out stage 3 progression; re-check electrolytes"
                         value={labNotes}
                         onChange={(e) => setLabNotes(e.target.value)}
-                        style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                        className="clinical-input"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      style={{
-                        background: "#0284c7",
-                        color: "#ffffff",
-                        border: "none",
-                        padding: "10px 20px",
-                        borderRadius: "8px",
-                        fontWeight: 700,
-                        cursor: "pointer",
-                      }}
+                      className="btn-primary-teal"
+                      style={{ width: "100%", padding: "10px" }}
                     >
-                      🚀 Send Order to Lab
+                      Send Order to Laboratory
                     </button>
                   </form>
                 </div>
@@ -654,62 +600,102 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
         {activeSideNav === "overview" && stats && (
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
-              <div className="white-card">
-                <div style={{ fontSize: "0.8rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>Total Assigned Patients</div>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#0284c7", marginTop: "6px" }}>{stats.assigned_patient_count}</div>
+              <div className="clinical-panel">
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.04em" }}>
+                  Total Assigned Patients
+                </div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--color-primary-accent)", marginTop: "6px" }}>
+                  {stats.assigned_patient_count}
+                </div>
               </div>
-              <div className="white-card">
-                <div style={{ fontSize: "0.8rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>High Risk Patient Alerts</div>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#dc2626", marginTop: "6px" }}>{stats.high_risk_patient_count}</div>
+              <div className="clinical-panel">
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.04em" }}>
+                  High Risk Patient Alerts
+                </div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--risk-high)", marginTop: "6px" }}>
+                  {stats.high_risk_patient_count}
+                </div>
               </div>
-              <div className="white-card">
-                <div style={{ fontSize: "0.8rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700 }}>Pending Lab Orders</div>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#ea580c", marginTop: "6px" }}>{stats.pending_lab_requests_count}</div>
+              <div className="clinical-panel">
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, letterSpacing: "0.04em" }}>
+                  Pending Lab Orders
+                </div>
+                <div style={{ fontSize: "1.8rem", fontWeight: 700, fontFamily: "JetBrains Mono, monospace", color: "var(--text-primary)", marginTop: "6px" }}>
+                  {stats.pending_lab_requests_count}
+                </div>
               </div>
             </div>
 
-            <div className="white-card">
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, marginBottom: "14px" }}>Recent Patient Evaluations</h3>
-              <table className="clickable-table">
-                <thead>
-                  <tr>
-                    <th>Patient MRN</th>
-                    <th>Prediction Verdict</th>
-                    <th>Risk Probability</th>
-                    <th>Recorded Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats.recent_predictions?.map((r: any) => (
-                    <tr key={r.id} onClick={() => { setActiveSideNav("patients"); handleSelectPatientRow(r.patient_id); }} className="clickable-row">
-                      <td style={{ fontWeight: 800, color: "#0284c7" }}>{r.patient_id}</td>
-                      <td>
-                        <span className={`badge-chip ${r.prediction_label === "ckd" ? "badge-chip--CKD" : "badge-chip--NOTCKD"}`}>
-                          {r.prediction_label.toUpperCase()}
-                        </span>
-                      </td>
-                      <td style={{ fontWeight: 700 }}>{r.risk_score}%</td>
-                      <td style={{ color: "#64748b", fontSize: "0.82rem" }}>{new Date(r.created_at).toLocaleString()}</td>
+            <div className="clinical-panel">
+              <h3 className="panel-title" style={{ fontSize: "1.1rem", marginBottom: "14px" }}>
+                Recent Patient Evaluations
+              </h3>
+              <div className="clinical-table-container">
+                <table className="clinical-table">
+                  <thead>
+                    <tr>
+                      <th>Patient MRN</th>
+                      <th>Prediction Verdict</th>
+                      <th>Risk Probability</th>
+                      <th>Recorded Date</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {stats.recent_predictions?.map((r: any) => {
+                      const isCkd = r.prediction_label === "ckd";
+                      return (
+                        <tr key={r.id} onClick={() => { setActiveSideNav("patients"); handleSelectPatientRow(r.patient_id); }} className="clickable-row">
+                          <td style={{ fontWeight: 700, color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
+                            {r.patient_id}
+                          </td>
+                          <td>
+                            <span className={`badge-clinical ${isCkd ? "badge-clinical--high" : "badge-clinical--low"}`}>
+                              {r.prediction_label.toUpperCase()}
+                            </span>
+                          </td>
+                          <td style={{ fontWeight: 600, fontFamily: "JetBrains Mono, monospace" }}>
+                            {formatRiskScore(r.risk_score)}
+                          </td>
+                          <td style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                            {new Date(r.created_at).toLocaleString()}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
 
         {/* ── D. CLINICAL ASSESSMENT (PATIENT FORM) ── */}
         {activeSideNav === "assessment" && (
-          <PatientForm token={token} />
+          <div style={{ width: "100%" }}>
+            <PatientForm
+              token={token}
+              onViewEHR={(pId) => {
+                if (pId) setSelectedPatientId(pId);
+                setActiveSideNav("ehr");
+              }}
+            />
+          </div>
         )}
 
         {/* ── E. LONGITUDINAL EHR CHART ── */}
         {activeSideNav === "ehr" && (
-          <UnifiedPatientEHR token={token} />
+          <div style={{ width: "100%" }}>
+            <UnifiedPatientEHR
+              token={token}
+              initialPatientId={selectedPatientId || undefined}
+              onNavigateToForm={(target, pId) => {
+                if (target === "assessment") setActiveSideNav("assessment");
+              }}
+            />
+          </div>
         )}
 
       </div>
     </div>
   );
 }
-

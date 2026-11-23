@@ -194,8 +194,9 @@ def login_user(payload: LoginRequest, request: Request, db: Session = Depends(ge
     Retrieves the actual role from the database and returns token with user profile.
     """
     identifier = payload.email.strip().lower()
+    alt_identifier = identifier.replace("@metrohealth.org", "@hospital.org")
     user = db.query(User).filter(
-        (User.email == identifier) | (User.username == identifier)
+        (User.email == identifier) | (User.email == alt_identifier) | (User.username == identifier)
     ).first()
 
     if not user or not verify_password(payload.password, user.hashed_password):

@@ -108,7 +108,7 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
         autosize: true,
         paper_bgcolor: "transparent",
         plot_bgcolor: "transparent",
-        font: { color: "#cbd5e1", family: "inherit" }
+        font: { color: "#64748b", family: "inherit" }
       };
 
       window.Plotly.newPlot(containerRef.current, fig.data, layout, config);
@@ -118,9 +118,9 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
   return (
     <div
       style={{
-        background: "rgba(15, 23, 42, 0.75)",
-        border: "1px solid rgba(148, 163, 184, 0.15)",
-        borderRadius: "16px",
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-color)",
+        borderRadius: "12px",
         padding: "20px",
         marginTop: "20px"
       }}
@@ -130,7 +130,7 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <span style={{ fontSize: "1.2rem" }}>📈</span>
-            <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+            <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
               Plotly / Dash Clinical Intelligence Suite
             </h3>
             <span
@@ -139,33 +139,33 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
                 fontWeight: 700,
                 padding: "2px 8px",
                 borderRadius: "6px",
-                background: "rgba(56, 189, 248, 0.15)",
-                color: "#38bdf8",
-                border: "1px solid rgba(56, 189, 248, 0.3)"
+                background: "var(--color-primary-subtle)",
+                color: "var(--color-primary-accent)",
+                border: "1px solid var(--color-primary-border)"
               }}
             >
               Synopsis H.4
             </span>
           </div>
-          <p style={{ fontSize: "0.78rem", color: "#94a3b8", margin: "4px 0 0 0" }}>
+          <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", margin: "4px 0 0 0" }}>
             High-fidelity interactive analytics with pan, zoom, coordinate hovers, and KDIGO prognostic zones.
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div style={{ display: "flex", background: "rgba(30, 41, 59, 0.8)", padding: "3px", borderRadius: "10px", gap: "4px" }}>
+        <div style={{ display: "flex", background: "var(--bg-surface-subtle)", border: "1px solid var(--border-color)", padding: "3px", borderRadius: "8px", gap: "4px" }}>
           <button
             type="button"
             onClick={() => setActiveTab("trajectory")}
             style={{
               padding: "6px 12px",
-              borderRadius: "7px",
+              borderRadius: "5px",
               fontSize: "0.76rem",
               fontWeight: 700,
               cursor: "pointer",
               border: "none",
-              background: activeTab === "trajectory" ? "#2563eb" : "transparent",
-              color: activeTab === "trajectory" ? "#ffffff" : "#94a3b8"
+              background: activeTab === "trajectory" ? "var(--color-primary-accent)" : "transparent",
+              color: activeTab === "trajectory" ? "#ffffff" : "var(--text-muted)"
             }}
           >
             eGFR Trajectory
@@ -175,13 +175,13 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
             onClick={() => setActiveTab("saliency")}
             style={{
               padding: "6px 12px",
-              borderRadius: "7px",
+              borderRadius: "5px",
               fontSize: "0.76rem",
               fontWeight: 700,
               cursor: "pointer",
               border: "none",
-              background: activeTab === "saliency" ? "#2563eb" : "transparent",
-              color: activeTab === "saliency" ? "#ffffff" : "#94a3b8"
+              background: activeTab === "saliency" ? "var(--color-primary-accent)" : "transparent",
+              color: activeTab === "saliency" ? "#ffffff" : "var(--text-muted)"
             }}
           >
             Temporal Attention
@@ -191,13 +191,13 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
             onClick={() => setActiveTab("kdigo")}
             style={{
               padding: "6px 12px",
-              borderRadius: "7px",
+              borderRadius: "5px",
               fontSize: "0.76rem",
               fontWeight: 700,
               cursor: "pointer",
               border: "none",
-              background: activeTab === "kdigo" ? "#2563eb" : "transparent",
-              color: activeTab === "kdigo" ? "#ffffff" : "#94a3b8"
+              background: activeTab === "kdigo" ? "var(--color-primary-accent)" : "transparent",
+              color: activeTab === "kdigo" ? "#ffffff" : "var(--text-muted)"
             }}
           >
             KDIGO 2D Matrix
@@ -207,13 +207,13 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
             onClick={() => setActiveTab("radar")}
             style={{
               padding: "6px 12px",
-              borderRadius: "7px",
+              borderRadius: "5px",
               fontSize: "0.76rem",
               fontWeight: 700,
               cursor: "pointer",
               border: "none",
-              background: activeTab === "radar" ? "#2563eb" : "transparent",
-              color: activeTab === "radar" ? "#ffffff" : "#94a3b8"
+              background: activeTab === "radar" ? "var(--color-primary-accent)" : "transparent",
+              color: activeTab === "radar" ? "#ffffff" : "var(--text-muted)"
             }}
           >
             Complications Radar

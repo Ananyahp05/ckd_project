@@ -264,35 +264,34 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
           }
         }
         .step-row {
-          background: rgba(15, 23, 42, 0.6);
-          border: 1px solid rgba(148, 163, 184, 0.12);
-          border-radius: 14px;
+          background: var(--bg-surface-subtle);
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
           padding: 16px;
           margin-bottom: 12px;
           transition: border-color 0.2s;
         }
         .step-row:hover {
-          border-color: rgba(99, 102, 241, 0.35);
+          border-color: var(--color-primary-accent);
         }
         .preset-chip {
-          background: rgba(30, 41, 59, 0.5);
-          border: 1px solid rgba(148, 163, 184, 0.15);
-          border-radius: 10px;
+          background: var(--bg-surface-subtle);
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
           padding: 10px 14px;
           text-align: left;
           cursor: pointer;
           transition: all 0.2s;
         }
         .preset-chip:hover {
-          background: rgba(99, 102, 241, 0.15);
-          border-color: rgba(99, 102, 241, 0.4);
-          transform: translateY(-1px);
+          background: var(--color-primary-subtle);
+          border-color: var(--color-primary-border);
         }
         .btn-predict {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          background: var(--color-primary-accent);
           color: #ffffff;
           border: none;
-          border-radius: 12px;
+          border-radius: 8px;
           padding: 14px 24px;
           font-size: 0.95rem;
           font-weight: 700;
@@ -302,12 +301,11 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
           justify-content: center;
           gap: 10px;
           width: 100%;
-          box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+          box-shadow: 0 2px 10px rgba(13, 148, 136, 0.25);
           transition: all 0.2s;
         }
         .btn-predict:hover:not(:disabled) {
-          transform: translateY(-1px);
-          box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+          background: var(--color-primary-hover);
         }
         .btn-predict:disabled {
           opacity: 0.6;
@@ -319,9 +317,9 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
       <div
         style={{
           marginBottom: "24px",
-          background: "linear-gradient(135deg, rgba(30, 27, 75, 0.7), rgba(15, 23, 42, 0.85))",
-          border: "1px solid rgba(99, 102, 241, 0.25)",
-          borderRadius: "20px",
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-color)",
+          borderRadius: "12px",
           padding: "24px 28px",
         }}
       >
@@ -329,7 +327,7 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
               <span style={{ fontSize: "1.5rem" }}>📈</span>
-              <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+              <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
                 Longitudinal Follow-Up Encounters & eGFR Trajectory
               </h2>
               <span
@@ -338,15 +336,15 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                   fontWeight: 700,
                   padding: "4px 10px",
                   borderRadius: "20px",
-                  background: "rgba(99, 102, 241, 0.2)",
-                  color: "#a5b4fc",
-                  border: "1px solid rgba(99, 102, 241, 0.4)",
+                  background: "var(--color-primary-subtle)",
+                  color: "var(--color-primary-accent)",
+                  border: "1px solid var(--color-primary-border)",
                 }}
               >
                 Sequential Encounters
               </span>
             </div>
-            <p style={{ fontSize: "0.86rem", color: "#94a3b8", maxWidth: "800px", lineHeight: "1.5", margin: 0 }}>
+            <p style={{ fontSize: "0.86rem", color: "var(--text-muted)", maxWidth: "800px", lineHeight: "1.5", margin: 0 }}>
               Record sequential outpatient checkups (observed eGFR and elapsed days) to analyze renal functional loss, determine KDIGO trajectory staging, and forecast subsequent clearance capacity.
             </p>
           </div>
@@ -399,8 +397,8 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                     onClick={() => handleLoadPreset(p)}
                     className="preset-chip"
                   >
-                    <div style={{ color: "#e2e8f0", fontWeight: 700, fontSize: "0.82rem" }}>{p.name}</div>
-                    <div style={{ fontSize: "0.7rem", color: "#64748b", marginTop: "2px" }}>{p.desc}</div>
+                    <div style={{ color: "var(--text-primary)", fontWeight: 700, fontSize: "0.82rem" }}>{p.name}</div>
+                    <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "2px" }}>{p.desc}</div>
                   </button>
                 ))}
               </div>
@@ -408,7 +406,7 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
 
             {/* Patient ID */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 600, color: "#94a3b8", marginBottom: "6px" }}>
+              <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "6px" }}>
                 Patient Identifier / Medical Record Number:
               </label>
               <input
@@ -417,11 +415,11 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                 onChange={(e) => setPatientId(e.target.value)}
                 style={{
                   width: "100%",
-                  background: "rgba(15, 23, 42, 0.8)",
-                  border: "1px solid rgba(148, 163, 184, 0.2)",
-                  borderRadius: "10px",
+                  background: "var(--bg-surface)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "6px",
                   padding: "10px 14px",
-                  color: "#f8fafc",
+                  color: "var(--text-primary)",
                   fontSize: "0.9rem",
                   outline: "none",
                 }}
@@ -431,10 +429,10 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
 
             {/* Timesteps Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-              <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#f1f5f9", margin: 0 }}>
+              <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
                 Longitudinal Clinical Visits (Sequential Consultations)
               </h3>
-              <span style={{ fontSize: "0.75rem", color: "#64748b" }}>
+              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
                 Features: [Day (ady), eGFR (aval), Baseline (base)]
               </span>
             </div>
@@ -443,17 +441,17 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
             {sequence.map((step, idx) => (
               <div key={idx} className="step-row">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#a5b4fc" }}>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--color-primary-accent)" }}>
                     Visit #{step.step}
                   </span>
-                  <span style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
                     {idx === 0 ? "Initial Baseline Visit" : `Follow-Up Visit ${idx}`}
                   </span>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px" }}>
+                <div className="responsive-three-col">
                   <div>
-                    <label style={{ display: "block", fontSize: "0.7rem", color: "#94a3b8", marginBottom: "4px" }}>
+                    <label style={{ display: "block", fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: "4px" }}>
                       Visit Day (ady)
                     </label>
                     <input
@@ -463,20 +461,20 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                       min={0}
                       style={{
                         width: "100%",
-                        background: "rgba(30, 41, 59, 0.7)",
-                        border: "1px solid rgba(148, 163, 184, 0.2)",
-                        borderRadius: "8px",
+                        background: "var(--bg-surface)",
+                        border: "1px solid var(--border-color)",
+                        borderRadius: "6px",
                         padding: "8px 10px",
-                        color: "#f8fafc",
+                        color: "var(--text-primary)",
                         fontSize: "0.85rem",
                       }}
                       required
                     />
-                    <span style={{ fontSize: "0.68rem", color: "#64748b" }}>Days since start</span>
+                    <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>Days since start</span>
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "0.7rem", color: "#94a3b8", marginBottom: "4px" }}>
+                    <label style={{ display: "block", fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: "4px" }}>
                       Observed eGFR (aval)
                     </label>
                     <input
@@ -488,20 +486,20 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                       step="0.1"
                       style={{
                         width: "100%",
-                        background: "rgba(30, 41, 59, 0.7)",
-                        border: "1px solid rgba(148, 163, 184, 0.2)",
-                        borderRadius: "8px",
+                        background: "var(--bg-surface)",
+                        border: "1px solid var(--border-color)",
+                        borderRadius: "6px",
                         padding: "8px 10px",
-                        color: "#f8fafc",
+                        color: "var(--text-primary)",
                         fontSize: "0.85rem",
                       }}
                       required
                     />
-                    <span style={{ fontSize: "0.68rem", color: "#64748b" }}>mL/min/1.73m²</span>
+                    <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>mL/min/1.73m²</span>
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "0.7rem", color: "#94a3b8", marginBottom: "4px" }}>
+                    <label style={{ display: "block", fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: "4px" }}>
                       Baseline eGFR (base)
                     </label>
                     <input
@@ -513,11 +511,11 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                       step="0.1"
                       style={{
                         width: "100%",
-                        background: "rgba(30, 41, 59, 0.7)",
-                        border: "1px solid rgba(148, 163, 184, 0.2)",
-                        borderRadius: "8px",
+                        background: "var(--bg-surface)",
+                        border: "1px solid var(--border-color)",
+                        borderRadius: "6px",
                         padding: "8px 10px",
-                        color: "#f8fafc",
+                        color: "var(--text-primary)",
                         fontSize: "0.85rem",
                       }}
                       required

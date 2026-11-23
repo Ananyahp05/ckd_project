@@ -107,7 +107,7 @@ export default function ClinicalReportModal({ isOpen, onClose, reportData }: Pro
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Clinical_Nephrology_Report_${reportData.patient_id}.html`;
+    a.download = `Clinical_Renal_Report_${reportData.patient_id}.html`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -415,7 +415,7 @@ export default function ClinicalReportModal({ isOpen, onClose, reportData }: Pro
               <div className="report-header">
                 <div>
                   <h1 className="report-title">CKD GUARDIAN CLINICAL HEALTH SYSTEM</h1>
-                  <p className="report-subtitle">Department of Nephrology & Explainable AI Decision Support</p>
+                  <p className="report-subtitle">Department of Renal Medicine & Explainable AI Decision Support</p>
                   <p style={{ margin: "4px 0 0 0", fontSize: "0.76rem", color: "#64748b" }}>
                     ISO 13485 Compliant Multi-Model AI Diagnostic & eGFR Progression Evaluation
                   </p>
@@ -455,7 +455,7 @@ export default function ClinicalReportModal({ isOpen, onClose, reportData }: Pro
 
               {/* Section 1: Multi-Model Consensus & Staging */}
               <div className="section-header">
-                <span>1. Multi-Model Nephrology Consensus & Staging</span>
+                <span>1. Multi-Model Renal Consensus & Staging</span>
               </div>
 
               <div className={`consensus-card ${reportData.consensus?.risk_level === "HIGH" ? "consensus-card--danger" : ""}`}>
@@ -586,7 +586,7 @@ export default function ClinicalReportModal({ isOpen, onClose, reportData }: Pro
 
               {/* Section 4: Clinical Lifestyle & Patient Care Guidelines */}
               <div className="section-header">
-                <span>4. Nephrology Clinical Care Plan & Patient Guidelines</span>
+                <span>4. Renal Clinical Care Plan & Patient Guidelines</span>
               </div>
               <ul style={{ margin: "0 0 24px 0", paddingLeft: "20px", fontSize: "0.83rem", color: "#334155", lineHeight: "1.6" }}>
                 {(reportData.guidelines && reportData.guidelines.length > 0 ? reportData.guidelines : [
@@ -616,7 +616,7 @@ export default function ClinicalReportModal({ isOpen, onClose, reportData }: Pro
                     {reportData.assigned_doctor || "Authorized Attending Physician"}
                   </div>
                   <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
-                    MD, Board Certified Nephrology / Internal Medicine
+                    MD, Board Certified Renal Medicine / Internal Medicine
                   </div>
                 </div>
               </div>

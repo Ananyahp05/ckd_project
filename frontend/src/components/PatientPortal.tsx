@@ -87,20 +87,32 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
     <>
       <style>{`
         .patient-portal-container {
-          max-width: 1300px;
+          max-width: 1400px;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 28px;
+          gap: 24px;
+          padding: 0 12px;
+          width: 100%;
+          box-sizing: border-box;
         }
         .portal-card {
-          background: rgba(15, 23, 42, 0.65);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(148, 163, 184, 0.12);
-          border-radius: 24px;
-          padding: 28px;
-          box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+          background: var(--bg-surface, #ffffff);
+          border: 1px solid var(--border-color, #e2e8f0);
+          border-radius: 12px;
+          padding: 24px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+          color: var(--text-primary, #0f172a);
+          width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+          .portal-card {
+            padding: 16px 14px;
+          }
+          .kpi-val {
+            font-size: 1.75rem !important;
+          }
         }
         .portal-header-badge {
           display: inline-flex;
@@ -108,22 +120,22 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
           gap: 6px;
           padding: 6px 14px;
           border-radius: 50px;
-          background: rgba(34, 197, 94, 0.12);
-          border: 1px solid rgba(34, 197, 94, 0.25);
-          color: #4ade80;
+          background: rgba(22, 163, 74, 0.12);
+          border: 1px solid rgba(22, 163, 74, 0.25);
+          color: #16A34A;
           font-size: 0.8rem;
           font-weight: 700;
         }
         .patient-kpi-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
           gap: 16px;
           margin-top: 20px;
         }
         .kpi-card {
-          background: rgba(30, 41, 59, 0.5);
-          border: 1px solid rgba(148, 163, 184, 0.1);
-          border-radius: 18px;
+          background: var(--bg-surface-subtle, #f8fafc);
+          border: 1px solid var(--border-color, #e2e8f0);
+          border-radius: 12px;
           padding: 20px;
           display: flex;
           flex-direction: column;
@@ -133,24 +145,25 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
           font-size: 0.72rem;
           text-transform: uppercase;
           font-weight: 700;
-          color: #94a3b8;
+          color: var(--text-muted, #64748b);
           letter-spacing: 0.05em;
         }
         .kpi-val {
           font-size: 2.2rem;
           font-weight: 900;
           line-height: 1.1;
+          color: var(--text-primary, #0f172a);
         }
         .guideline-item {
           display: flex;
           align-items: flex-start;
           gap: 12px;
           padding: 12px 16px;
-          border-radius: 12px;
-          background: rgba(30, 41, 59, 0.4);
-          border: 1px solid rgba(148, 163, 184, 0.08);
+          border-radius: 8px;
+          background: var(--bg-surface-subtle, #f8fafc);
+          border: 1px solid var(--border-color, #e2e8f0);
           font-size: 0.88rem;
-          color: #e2e8f0;
+          color: var(--text-secondary, #334155);
           line-height: 1.4;
         }
       `}</style>
@@ -160,13 +173,13 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
         <div className="portal-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
-              <span className="portal-header-badge">🩺 Verified Patient Portal</span>
-              <span style={{ fontSize: "0.8rem", color: "#64748b" }}>ID: <strong style={{ color: "#a5b4fc" }}>{username}</strong></span>
+              <span className="portal-header-badge">Verified Patient Portal</span>
+              <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>ID: <strong style={{ color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>{username}</strong></span>
             </div>
-            <h2 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#f8fafc" }}>
+            <h2 style={{ fontSize: "1.6rem", fontWeight: 700, color: "var(--text-primary)" }}>
               Personal Kidney Health Intelligence
             </h2>
-            <p style={{ fontSize: "0.85rem", color: "#94a3b8", marginTop: "4px" }}>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "4px" }}>
               Longitudinal tracking of clinical biomarker trends, risk analytics, and personalized lifestyle recommendations.
             </p>
           </div>
@@ -174,57 +187,41 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
           <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
             <button
               onClick={() => setIsReportOpen(true)}
-              style={{
-                background: "linear-gradient(135deg, #0284c7, #0369a1)",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "12px",
-                padding: "8px 18px",
-                fontSize: "0.82rem",
-                fontWeight: 700,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-              }}
+              className="btn-primary-teal"
             >
-              📄 Download My Health Report (PDF)
+              Download Health Report (PDF)
             </button>
             <button
               onClick={fetchPatientSummary}
-              style={{
-                background: "rgba(99, 102, 241, 0.12)", border: "1px solid rgba(99, 102, 241, 0.3)",
-                color: "#a5b4fc", padding: "8px 18px", borderRadius: "12px", fontSize: "0.82rem",
-                fontWeight: 700, cursor: "pointer"
-              }}
+              className="btn-secondary"
             >
-              ↻ Refresh Health Records
+              Refresh Records
             </button>
           </div>
         </div>
 
         {loading ? (
-          <div className="portal-card" style={{ textAlign: "center", padding: "60px", color: "#64748b" }}>
-            <span className="spinner" /> Loading your personal kidney intelligence records...
+          <div className="portal-card" style={{ textAlign: "center", padding: "60px", color: "var(--text-muted)" }}>
+            <span className="spinner" /> Loading personal clinical records...
           </div>
         ) : errorMsg ? (
           <div className="error-box">⚠ {errorMsg}</div>
         ) : !latest ? (
           <div className="portal-card" style={{ textAlign: "center", padding: "60px 40px" }}>
-            <div style={{ fontSize: "3rem", marginBottom: "16px" }}>📋</div>
-            <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#f1f5f9" }}>No Prior Assessment on File</h3>
-            <p style={{ fontSize: "0.85rem", color: "#64748b", maxWidth: "500px", margin: "8px auto 24px" }}>
+            <div style={{ fontSize: "2.5rem", marginBottom: "16px" }}>📋</div>
+            <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)" }}>No Prior Assessment on File</h3>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "500px", margin: "8px auto 24px" }}>
               No diagnostic evaluations have been saved under Patient ID <strong>{username}</strong> yet. When your doctor evaluates your vitals and lab results, your risk trajectories will appear here automatically.
             </p>
 
             <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "left" }}>
-              <h4 style={{ fontSize: "0.85rem", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", marginBottom: "12px" }}>
+              <h4 style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)", textTransform: "uppercase", marginBottom: "12px" }}>
                 General Preventive Kidney Health Guidelines:
               </h4>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {(summary?.lifestyle_guidelines || []).map((g, i) => (
                   <div key={i} className="guideline-item">
-                    <span style={{ color: "#4ade80" }}>✓</span>
+                    <span style={{ color: "var(--risk-low)" }}>✓</span>
                     <span>{g}</span>
                   </div>
                 ))}
@@ -236,16 +233,16 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
             {/* KPI Cards: Latest Status */}
             <div className="patient-kpi-grid">
               <div className="kpi-card" style={{
-                background: `radial-gradient(ellipse at top, ${isHigh ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.12)"} 0%, rgba(15,23,42,0.6) 70%)`,
-                border: `1px solid ${isHigh ? "rgba(239,68,68,0.3)" : "rgba(34,197,94,0.3)"}`,
+                background: isHigh ? "var(--risk-high-bg)" : "var(--risk-low-bg)",
+                border: `1px solid ${isHigh ? "var(--risk-high-border)" : "var(--risk-low-border)"}`,
               }}>
                 <div className="kpi-label">Latest CKD Risk Score</div>
-                <div className="kpi-val" style={{ color: isHigh ? "#f87171" : "#4ade80" }}>
-                  {latest.risk_score.toFixed(1)}%
+                <div className="kpi-val" style={{ color: isHigh ? "var(--risk-high)" : "var(--risk-low)", fontFamily: "JetBrains Mono, monospace" }}>
+                  {latest.risk_score !== null && latest.risk_score !== undefined ? `${Number(latest.risk_score).toFixed(1)}%` : "—"}
                 </div>
                 <span style={{
-                  fontSize: "0.75rem", fontWeight: 700,
-                  color: isHigh ? "#fca5a5" : "#86efac"
+                  fontSize: "0.75rem", fontWeight: 600,
+                  color: isHigh ? "var(--risk-high)" : "var(--risk-low)"
                 }}>
                   Status: {latest.severity} ({isHigh ? "Elevated Attention Needed" : "Low Risk Profile"})
                 </span>
@@ -253,28 +250,28 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
 
               <div className="kpi-card">
                 <div className="kpi-label">Serum Creatinine</div>
-                <div className="kpi-val" style={{ color: (latest.key_vitals?.creatinine ?? 0) > 1.2 ? "#fbbf24" : "#e2e8f0" }}>
+                <div className="kpi-val" style={{ color: (latest.key_vitals?.creatinine ?? 0) > 1.2 ? "var(--risk-high)" : "var(--text-primary)", fontFamily: "JetBrains Mono, monospace" }}>
                   {latest.key_vitals?.creatinine !== undefined ? `${latest.key_vitals.creatinine} ` : "—"}
-                  <span style={{ fontSize: "1rem", fontWeight: 500, color: "#64748b" }}>mg/dL</span>
+                  <span style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--text-muted)" }}>mg/dL</span>
                 </div>
-                <span style={{ fontSize: "0.72rem", color: "#64748b" }}>Normal reference: 0.6 – 1.2 mg/dL</span>
+                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Normal reference: 0.6 – 1.2 mg/dL</span>
               </div>
 
               <div className="kpi-card">
                 <div className="kpi-label">Blood Pressure</div>
-                <div className="kpi-val" style={{ color: (latest.key_vitals?.bp ?? 0) > 85 ? "#fbbf24" : "#e2e8f0" }}>
+                <div className="kpi-val" style={{ color: (latest.key_vitals?.bp ?? 0) > 85 ? "var(--risk-high)" : "var(--text-primary)", fontFamily: "JetBrains Mono, monospace" }}>
                   {latest.key_vitals?.bp !== undefined ? `${latest.key_vitals.bp} ` : "—"}
-                  <span style={{ fontSize: "1rem", fontWeight: 500, color: "#64748b" }}>mmHg</span>
+                  <span style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--text-muted)" }}>mmHg</span>
                 </div>
-                <span style={{ fontSize: "0.72rem", color: "#64748b" }}>Normal reference: 60 – 85 mmHg (diastolic)</span>
+                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Normal reference: 60 – 85 mmHg (diastolic)</span>
               </div>
 
               <div className="kpi-card">
                 <div className="kpi-label">Total Visits Tracked</div>
-                <div className="kpi-val" style={{ color: "#a5b4fc" }}>
+                <div className="kpi-val" style={{ color: "var(--color-primary-accent)", fontFamily: "JetBrains Mono, monospace" }}>
                   {summary?.total_assessments}
                 </div>
-                <span style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
                   Last visit: {latest.date ? new Date(latest.date).toLocaleDateString() : "Recent"}
                 </span>
               </div>
@@ -283,10 +280,10 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
             {/* Longitudinal Trend Chart (Fulfilling Synopsis Real-Time Monitoring & Trend Modeling) */}
             <div className="portal-card">
               <div style={{ marginBottom: "20px" }}>
-                <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#f1f5f9" }}>
-                  📈 Longitudinal Health Trajectory Over Time
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--text-primary)" }}>
+                  Longitudinal Health Trajectory Over Time
                 </h3>
-                <p style={{ fontSize: "0.8rem", color: "#64748b", marginTop: "2px" }}>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "2px" }}>
                   Visualizing how your kidney risk score and serum creatinine have evolved across clinical consultations.
                 </p>
               </div>
@@ -294,14 +291,14 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
               <div style={{ height: "280px", width: "100%" }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={formattedTrajectory} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                    <XAxis dataKey="name" tick={{ fill: "#64748b", fontSize: 11 }} />
-                    <YAxis yAxisId="left" domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 11 }} />
-                    <YAxis yAxisId="right" orientation="right" domain={[0, 5]} tick={{ fill: "#64748b", fontSize: 11 }} />
-                    <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid #1e293b", color: "#e2e8f0" }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                    <XAxis dataKey="name" tick={{ fill: "var(--text-muted)", fontSize: 11 }} />
+                    <YAxis yAxisId="left" domain={[0, 100]} tick={{ fill: "var(--text-muted)", fontSize: 11 }} />
+                    <YAxis yAxisId="right" orientation="right" domain={[0, 5]} tick={{ fill: "var(--text-muted)", fontSize: 11 }} />
+                    <Tooltip contentStyle={{ background: "var(--bg-surface)", border: "1px solid var(--border-color)", color: "var(--text-primary)", borderRadius: "6px" }} />
                     <Legend wrapperStyle={{ fontSize: 12 }} />
-                    <Line yAxisId="left" type="monotone" dataKey="risk_score" stroke="#ef4444" strokeWidth={3} name="Risk Score (%)" dot={{ r: 4 }} />
-                    <Line yAxisId="right" type="monotone" dataKey="creatinine" stroke="#60a5fa" strokeWidth={2} name="Creatinine (mg/dL)" dot={{ r: 3 }} />
+                    <Line yAxisId="left" type="monotone" dataKey="risk_score" stroke="var(--risk-high)" strokeWidth={2.5} name="Risk Score (%)" dot={{ r: 4 }} />
+                    <Line yAxisId="right" type="monotone" dataKey="creatinine" stroke="var(--color-primary-accent)" strokeWidth={2} name="Creatinine (mg/dL)" dot={{ r: 3 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -309,17 +306,17 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
 
             {/* Personalized Clinical Lifestyle & Dietary Recommendations */}
             <div className="portal-card">
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#f1f5f9", marginBottom: "8px" }}>
-                🥗 Personalized Lifestyle & Care Guidelines
+              <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px" }}>
+                Personalized Lifestyle & Care Guidelines
               </h3>
-              <p style={{ fontSize: "0.82rem", color: "#64748b", marginBottom: "18px" }}>
-                Dynamic health guidelines tailored directly to your latest laboratory readings:
+              <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: "18px" }}>
+                Clinical guidance tailored to your recorded biomarkers:
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {summary?.lifestyle_guidelines.map((guide, idx) => (
                   <div key={idx} className="guideline-item">
-                    <span style={{ color: "#38bdf8", fontSize: "1.1rem" }}>💡</span>
+                    <span style={{ color: "var(--color-primary-accent)", fontSize: "1rem" }}>&bull;</span>
                     <span>{guide}</span>
                   </div>
                 ))}
@@ -349,7 +346,7 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
             kdigo_stage: latest.severity === "CKD" ? "KDIGO Evaluation Indicated" : "Stage 1 (Normal)",
             concordance: "Personal Health Monitoring Portal",
             clinical_action: latest.severity === "CKD"
-              ? "Consult your nephrologist promptly. Discuss blood pressure targets (<130/80 mmHg) and renal protection."
+              ? "Consult your attending renal specialist promptly. Discuss blood pressure targets (<130/80 mmHg) and renal protection."
               : "Continue healthy lifestyle habits, active hydration, and annual biometric checkups.",
           } : null,
           biomarkers: latest?.key_vitals ? [

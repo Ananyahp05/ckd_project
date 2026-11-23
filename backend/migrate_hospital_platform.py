@@ -138,12 +138,12 @@ def migrate():
     """)
 
     # Seed default hospital
-    cursor.execute("SELECT id FROM ckd_hospitals WHERE code = 'METRO-NEPHRO-01'")
+    cursor.execute("SELECT id FROM ckd_hospitals WHERE code = 'CLINICAL-CKD-01'")
     hosp = cursor.fetchone()
     if not hosp:
         cursor.execute("""
         INSERT INTO ckd_hospitals (name, code, address, contact_email, phone)
-        VALUES ('MetroHealth Nephrology & Kidney Institute', 'METRO-NEPHRO-01', '742 Evergreen Terrace, Medical District', 'nephrology@metrohealth.org', '+1-800-555-0199')
+        VALUES ('Clinical Renal & Kidney Health Platform', 'CLINICAL-CKD-01', '742 Evergreen Terrace, Medical District', 'care@hospital.org', '+1-800-555-0199')
         """)
         hospital_id = cursor.lastrowid
         print(f"Created default hospital with ID: {hospital_id}")
@@ -160,7 +160,7 @@ def migrate():
             if "@" in uname:
                 computed_email = uname.lower()
             else:
-                computed_email = f"{uname.lower()}@metrohealth.org"
+                computed_email = f"{uname.lower()}@hospital.org"
         
         computed_fullname = ufname
         if not computed_fullname:
@@ -198,9 +198,9 @@ def migrate():
         hashed = bcrypt.hashpw(b"Admin@Hospital2026", bcrypt.gensalt()).decode('utf-8')
         cursor.execute("""
         INSERT INTO ckd_users (username, email, full_name, hashed_password, role, hospital_id, account_status, email_verified)
-        VALUES ('admin', 'admin@metrohealth.org', 'Chief Hospital Administrator', ?, 'admin', ?, 'active', 1)
+        VALUES ('admin', 'admin@hospital.org', 'Chief Hospital Administrator', ?, 'admin', ?, 'active', 1)
         """, (hashed, hospital_id))
-        print("Provisioned authorized Hospital Admin bootstrap account: admin@metrohealth.org")
+        print("Provisioned authorized Hospital Admin bootstrap account: admin@hospital.org")
 
     # Backfill patient records from existing assignments and predictions
     cursor.execute("SELECT DISTINCT patient_id FROM ckd_prediction_history WHERE patient_id IS NOT NULL")

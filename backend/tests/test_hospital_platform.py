@@ -82,7 +82,7 @@ async def run_tests():
         print(f"[OK] 4. Admin Overview Statistics: Total Doctors={admin_stats['stats']['total_doctors']}, Total Patients={admin_stats['stats']['total_patients']}.")
 
         # ── 4. HOSPITAL ADMIN INVITES STAFF (PHASE 2.C & PHASE 5) ─────────────
-        doc_email = "dr.elena.nephro@metrohealth.org"
+        doc_email = "dr.elena.renal@hospital.org"
         existing_doc = db.query(User).filter(User.email == doc_email).first()
         if existing_doc:
             db.delete(existing_doc)
@@ -93,7 +93,7 @@ async def run_tests():
                 full_name="Dr. Elena Rostova",
                 email=doc_email,
                 role="doctor",
-                specialization="Nephrology & Renal Dialysis"
+                specialization="Renal Care & Dialysis"
             ),
             db=db,
             current_user=admin
@@ -175,7 +175,7 @@ async def run_tests():
         if not tech:
             tech = User(
                 username="tech_marcus",
-                email="tech.marcus@metrohealth.org",
+                email="tech.marcus@hospital.org",
                 full_name="Marcus Vance, MLS(ASCP)",
                 role="lab_technician",
                 account_status="active",

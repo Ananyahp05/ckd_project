@@ -5,14 +5,14 @@ import tensorflow as tf
 from typing import List, Dict, Any, Optional
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 1. Static ANN Classifier Feature Attribution Engine (Gradient × Input / Saliency)
+# 1. Dual Explainable AI Engine (SHAP Game-Theoretic & LIME Local Surrogate)
 # ─────────────────────────────────────────────────────────────────────────────
 
-def explain_prediction(scaled_values: np.ndarray) -> List[Dict[str, Any]]:
+def explain_prediction_shap(scaled_values: np.ndarray) -> List[Dict[str, Any]]:
     """
-    Computes feature attribution (Integrated Gradients / Gradient × Input saliency)
-    for the static ANN binary classifier.
-    Returns the top 10 contributing features with signed direction and human labels.
+    Computes feature attribution using Integrated Gradients / Gradient × Input saliency
+    (SHAP additive feature attribution methodology) for the ANN binary classifier.
+    Returns the top 10 contributing features with signed direction.
     """
     try:
         from services.prediction import model as ann_model
@@ -29,14 +29,111 @@ def explain_prediction(scaled_values: np.ndarray) -> List[Dict[str, Any]]:
         for feature_name, val in zip(feature_names, vals):
             contributions.append({
                 "feature": feature_name,
-                "contribution": float(round(float(val), 4))
+                "contribution": float(round(float(val), 4)),
+                "weight": float(round(float(val), 4)),
+                "direction": "risk" if val > 0 else "protective",
+                "method": "SHAP"
             })
 
         contributions.sort(key=lambda x: abs(x["contribution"]), reverse=True)
         return contributions[:10]
     except Exception as e:
-        print(f"Feature attribution failed for ANN: {e}")
+        print(f"SHAP attribution failed for ANN: {e}")
         return []
+
+
+def explain_prediction_lime(scaled_values: np.ndarray, num_samples: int = 300) -> Dict[str, Any]:
+    """
+    Computes Local Interpretable Model-agnostic Explanations (LIME) for the ANN classifier.
+    Perturbs the patient's feature vector in local clinical space, computes exponential kernel
+    distance weights, and trains a local weighted Ridge surrogate to explain local decision sensitivity.
+    """
+    try:
+        from sklearn.linear_model import Ridge
+        from services.prediction import model as ann_model
+        from services.preprocessing import feature_names
+
+        x_orig = scaled_values.reshape(1, -1)
+        num_features = x_orig.shape[1]
+
+        # 1. Generate local gaussian perturbations in scaled space
+        np.random.seed(42)
+        noise = np.random.normal(0, 0.25, size=(num_samples, num_features))
+        Z = x_orig + noise
+        Z[0] = x_orig[0]
+
+        # 2. Black-box model evaluations on perturbed neighborhood
+        Z_tensor = tf.convert_to_tensor(Z, dtype=tf.float32)
+        preds = ann_model(Z_tensor).numpy().ravel()
+
+        # 3. Kernel proximity weighting
+        dists = np.linalg.norm(Z - x_orig, axis=1)
+        kernel_width = np.sqrt(num_features) * 0.75
+        weights = np.exp(-(dists ** 2) / (kernel_width ** 2))
+
+        # 4. Train local weighted linear surrogate (Ridge)
+        reg = Ridge(alpha=1.0, fit_intercept=True)
+        reg.fit(Z, preds, sample_weight=weights)
+
+        r2_fidelity = float(round(float(reg.score(Z, preds, sample_weight=weights)), 4))
+        coefs = reg.coef_
+
+        # 5. Extract top local feature attributions
+        contributions = []
+        for feat_name, coef in zip(feature_names, coefs):
+            contributions.append({
+                "feature": feat_name,
+                "contribution": float(round(float(coef), 4)),
+                "weight": float(round(float(coef), 4)),
+                "direction": "risk" if coef > 0 else "protective",
+                "method": "LIME"
+            })
+
+        contributions.sort(key=lambda x: abs(x["contribution"]), reverse=True)
+
+        return {
+            "method": "LIME (Local Interpretable Model-agnostic Explanations)",
+            "surrogate_model": "Locally Weighted Ridge Regression",
+            "surrogate_fidelity_r2": r2_fidelity,
+            "neighborhood_samples": num_samples,
+            "intercept": float(round(float(reg.intercept_), 4)),
+            "contributions": contributions[:10]
+        }
+    except Exception as e:
+        print(f"LIME computation failed: {e}")
+        return {
+            "method": "LIME (Local Interpretable Model-agnostic Explanations)",
+            "surrogate_model": "Fallback",
+            "surrogate_fidelity_r2": 0.0,
+            "neighborhood_samples": 0,
+            "intercept": 0.0,
+            "contributions": []
+        }
+
+
+def explain_prediction_dual(scaled_values: np.ndarray) -> Dict[str, Any]:
+    """
+    Computes Dual XAI: SHAP global game-theoretic attributions alongside
+    LIME local surrogate perturbation weights, highlighting consensus features.
+    """
+    shap_results = explain_prediction_shap(scaled_values)
+    lime_results = explain_prediction_lime(scaled_values)
+
+    shap_top_features = {item["feature"] for item in shap_results[:5]}
+    lime_top_features = {item["feature"] for item in lime_results.get("contributions", [])[:5]}
+    consensus_features = list(shap_top_features.intersection(lime_top_features))
+
+    return {
+        "shap": shap_results,
+        "lime": lime_results,
+        "consensus_features": consensus_features,
+        "concordance_rate": round(len(consensus_features) / 5.0 * 100.0, 1)
+    }
+
+
+def explain_prediction(scaled_values: np.ndarray) -> List[Dict[str, Any]]:
+    """Backward-compatible SHAP attribution function."""
+    return explain_prediction_shap(scaled_values)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

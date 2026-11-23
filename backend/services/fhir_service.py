@@ -352,7 +352,7 @@ def build_fhir_risk_assessment_resource(
         ],
         "note": [
             {
-                "text": f"Consensus Nephrology Protocol: {clinical_action}",
+                "text": f"Consensus Renal Protocol: {clinical_action}",
             }
         ],
     }
@@ -391,7 +391,7 @@ def build_fhir_diagnostic_report_resource(
                     "display": "Renal function panel - Serum or Plasma",
                 }
             ],
-            "text": "Comprehensive Nephrology Panel & AI Diagnostics",
+            "text": "Comprehensive Renal Panel & AI Diagnostics",
         },
         "subject": {
             "reference": f"Patient/{patient_ref_id}",

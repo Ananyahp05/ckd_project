@@ -227,20 +227,18 @@ export default function LSTMPredictionForm({ token }: Props) {
           }
         }
         .glass-card {
-          background: rgba(15, 23, 42, 0.65);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border: 1px solid rgba(148, 163, 184, 0.12);
-          border-radius: 20px;
+          background: var(--bg-surface);
+          border: 1px solid var(--border-color);
+          border-radius: 12px;
           padding: 24px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .preset-chip {
           padding: 8px 14px;
-          background: rgba(30, 41, 59, 0.6);
-          border: 1px solid rgba(148, 163, 184, 0.15);
-          border-radius: 12px;
-          color: #94a3b8;
+          background: var(--bg-surface-subtle);
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
+          color: var(--text-muted);
           font-size: 0.78rem;
           font-weight: 600;
           cursor: pointer;
@@ -248,20 +246,20 @@ export default function LSTMPredictionForm({ token }: Props) {
           text-align: left;
         }
         .preset-chip:hover {
-          background: rgba(99, 102, 241, 0.15);
-          border-color: rgba(99, 102, 241, 0.4);
-          color: #f1f5f9;
+          background: var(--color-primary-subtle);
+          border-color: var(--color-primary-border);
+          color: var(--color-primary-accent);
         }
         .step-row {
-          background: rgba(30, 41, 59, 0.35);
-          border: 1px solid rgba(148, 163, 184, 0.08);
-          border-radius: 14px;
+          background: var(--bg-surface-subtle);
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
           padding: 16px;
           margin-bottom: 12px;
           transition: border-color 0.2s;
         }
         .step-row:hover {
-          border-color: rgba(99, 102, 241, 0.25);
+          border-color: var(--color-primary-accent);
         }
         .input-cell {
           display: flex;
@@ -271,28 +269,28 @@ export default function LSTMPredictionForm({ token }: Props) {
         .input-cell label {
           font-size: 0.75rem;
           font-weight: 600;
-          color: #94a3b8;
+          color: var(--text-muted);
         }
         .input-cell input {
-          background: rgba(15, 23, 42, 0.8);
-          border: 1px solid rgba(148, 163, 184, 0.18);
-          border-radius: 10px;
+          background: var(--bg-surface);
+          border: 1px solid var(--border-color);
+          border-radius: 6px;
           padding: 8px 12px;
-          color: #f8fafc;
+          color: var(--text-primary);
           font-size: 0.9rem;
           font-weight: 600;
           outline: none;
           transition: all 0.2s;
         }
         .input-cell input:focus {
-          border-color: #6366f1;
-          box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+          border-color: var(--color-primary-accent);
+          box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
         }
         .btn-predict {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          background: var(--color-primary-accent);
           color: #ffffff;
           border: none;
-          border-radius: 12px;
+          border-radius: 8px;
           padding: 14px 24px;
           font-size: 0.95rem;
           font-weight: 700;
@@ -302,12 +300,11 @@ export default function LSTMPredictionForm({ token }: Props) {
           justify-content: center;
           gap: 10px;
           width: 100%;
-          box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+          box-shadow: 0 2px 10px rgba(13, 148, 136, 0.25);
           transition: all 0.2s;
         }
         .btn-predict:hover:not(:disabled) {
-          transform: translateY(-1px);
-          box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+          background: var(--color-primary-hover);
         }
         .btn-predict:disabled {
           opacity: 0.6;
@@ -320,15 +317,13 @@ export default function LSTMPredictionForm({ token }: Props) {
         className="glass-card"
         style={{
           marginBottom: "24px",
-          background: "linear-gradient(135deg, rgba(30, 27, 75, 0.7), rgba(15, 23, 42, 0.85))",
-          borderColor: "rgba(99, 102, 241, 0.25)",
         }}
       >
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
               <span style={{ fontSize: "1.5rem" }}>📈</span>
-              <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+              <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
                 LSTM Sequential eGFR Trend Prediction
               </h2>
               <span
@@ -337,15 +332,15 @@ export default function LSTMPredictionForm({ token }: Props) {
                   fontWeight: 700,
                   padding: "4px 10px",
                   borderRadius: "20px",
-                  background: "rgba(99, 102, 241, 0.2)",
-                  color: "#a5b4fc",
-                  border: "1px solid rgba(99, 102, 241, 0.4)",
+                  background: "var(--color-primary-subtle)",
+                  color: "var(--color-primary-accent)",
+                  border: "1px solid var(--color-primary-border)",
                 }}
               >
                 Regression Task
               </span>
             </div>
-            <p style={{ fontSize: "0.86rem", color: "#94a3b8", maxWidth: "800px", lineHeight: "1.5", margin: 0 }}>
+            <p style={{ fontSize: "0.86rem", color: "var(--text-muted)", maxWidth: "800px", lineHeight: "1.5", margin: 0 }}>
               Forecasts the next observed continuous eGFR value (mL/min/1.73m²) from 3 sequential clinical visits using a recurrent Long Short-Term Memory network trained on longitudinal renal biomarkers.
             </p>
           </div>
@@ -353,11 +348,11 @@ export default function LSTMPredictionForm({ token }: Props) {
           <div
             style={{
               padding: "10px 16px",
-              borderRadius: "12px",
-              background: "rgba(15, 23, 42, 0.6)",
-              border: "1px solid rgba(148, 163, 184, 0.12)",
+              borderRadius: "8px",
+              background: "var(--bg-surface-subtle)",
+              border: "1px solid var(--border-color)",
               fontSize: "0.76rem",
-              color: "#cbd5e1",
+              color: "var(--text-secondary)",
             }}
           >
             <div><strong>Engine:</strong> LSTM (units: 64, Dropout)</div>
@@ -405,8 +400,8 @@ export default function LSTMPredictionForm({ token }: Props) {
                     onClick={() => handleLoadPreset(p)}
                     className="preset-chip"
                   >
-                    <div style={{ color: "#e2e8f0", fontWeight: 700 }}>{p.name}</div>
-                    <div style={{ fontSize: "0.7rem", color: "#64748b", marginTop: "2px" }}>{p.desc}</div>
+                    <div style={{ color: "var(--text-primary)", fontWeight: 700 }}>{p.name}</div>
+                    <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "2px" }}>{p.desc}</div>
                   </button>
                 ))}
               </div>
@@ -414,7 +409,7 @@ export default function LSTMPredictionForm({ token }: Props) {
 
             {/* Patient ID */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 600, color: "#94a3b8", marginBottom: "6px" }}>
+              <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "6px" }}>
                 Patient Identifier / Medical Record Number:
               </label>
               <input
@@ -423,11 +418,11 @@ export default function LSTMPredictionForm({ token }: Props) {
                 onChange={(e) => setPatientId(e.target.value)}
                 style={{
                   width: "100%",
-                  background: "rgba(15, 23, 42, 0.8)",
-                  border: "1px solid rgba(148, 163, 184, 0.18)",
-                  borderRadius: "10px",
+                  background: "var(--bg-surface)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "6px",
                   padding: "10px 14px",
-                  color: "#f8fafc",
+                  color: "var(--text-primary)",
                   fontSize: "0.9rem",
                   outline: "none",
                 }}
@@ -437,10 +432,10 @@ export default function LSTMPredictionForm({ token }: Props) {
 
             {/* Timesteps Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-              <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#f1f5f9", margin: 0 }}>
+              <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
                 Longitudinal Clinical Visits (Exactly 3 Timesteps)
               </h3>
-              <span style={{ fontSize: "0.75rem", color: "#64748b" }}>
+              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
                 Features: [Day (ady), eGFR (aval), Baseline (base)]
               </span>
             </div>
@@ -449,15 +444,15 @@ export default function LSTMPredictionForm({ token }: Props) {
             {sequence.map((step, idx) => (
               <div key={idx} className="step-row">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#a5b4fc" }}>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--color-primary-accent)" }}>
                     Visit #{idx + 1}
                   </span>
-                  <span style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
                     {idx === 0 ? "Initial Baseline Visit" : idx === 1 ? "Follow-Up Visit 1" : "Follow-Up Visit 2"}
                   </span>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                <div className="responsive-three-col">
                   <div className="input-cell">
                     <label>Visit Day (ady)</label>
                     <input
@@ -751,9 +746,8 @@ export default function LSTMPredictionForm({ token }: Props) {
 
               {/* Benchmarks & Model Metadata */}
               <div
+                className="responsive-two-col"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
                   gap: "10px",
                   fontSize: "0.74rem",
                   color: "#94a3b8",

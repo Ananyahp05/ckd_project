@@ -104,17 +104,43 @@ def calculate_progression_probability(
     elif current_egfr <= 15.0:
         estimated_months_to_stage5 = 0
 
+    # 4. Long-Term Prognostic Hazard & Complication Estimator (12-month & 36-month ESRD + CVD)
+    hazard_12m_esrd = max(0.1, min(95.0, round(risk_2yr_pct * 0.52, 1)))
+    hazard_36m_esrd = max(0.2, min(99.0, round(risk_2yr_pct + (risk_5yr_pct - risk_2yr_pct) * 0.45, 1)))
+
+    cvd_base = 5.0
+    if current_egfr < 30:
+        cvd_base += 40.0
+    elif current_egfr < 60:
+        cvd_base += 20.0
+    if albumin_grade and albumin_grade >= 2:
+        cvd_base += 18.0
+    if annualized_slope <= -5.0:
+        cvd_base += 15.0
+
+    hazard_12m_cvd = max(3.0, min(92.0, round(cvd_base * 0.65, 1)))
+    hazard_36m_cvd = max(6.0, min(98.0, round(cvd_base * 1.15, 1)))
+
+    prognostic_hazard_index = max(1.0, min(99.0, round(
+        (hazard_36m_esrd * 0.55) + (hazard_36m_cvd * 0.45), 1
+    )))
+
     return {
         "annualized_slope_ml_min_year": annualized_slope,
         "slope_status": slope_status,
         "rapid_progression_flag": rapid_progression_flag,
+        "hazard_12m_esrd_pct": hazard_12m_esrd,
+        "hazard_36m_esrd_pct": hazard_36m_esrd,
+        "hazard_12m_cvd_pct": hazard_12m_cvd,
+        "hazard_36m_cvd_pct": hazard_36m_cvd,
+        "prognostic_hazard_index": prognostic_hazard_index,
         "kfre_two_year_esrd_probability_pct": risk_2yr_pct,
         "kfre_five_year_esrd_probability_pct": risk_5yr_pct,
         "estimated_months_to_esrd": estimated_months_to_stage5,
         "progression_risk_category": "VERY HIGH" if risk_5yr_pct >= 40 else ("HIGH" if risk_5yr_pct >= 15 else ("MODERATE" if risk_5yr_pct >= 5 else "LOW")),
         "clinical_significance": (
-            f"Estimated 5-year kidney failure risk is {risk_5yr_pct}% with an annualized filtration trajectory of "
-            f"{annualized_slope:+.1f} mL/min/1.73m²/year ({slope_status})."
+            f"Estimated 12-month ESRD hazard is {hazard_12m_esrd}% (36-month: {hazard_36m_esrd}%), with a 36-month cardiovascular complication hazard of {hazard_36m_cvd}%. "
+            f"Annualized filtration trajectory: {annualized_slope:+.1f} mL/min/1.73m²/year ({slope_status})."
         )
     }
 
@@ -293,7 +319,7 @@ def calculate_treatment_priority(
 ) -> Dict[str, Any]:
     """
     Computes a standardized 0–100 Clinical Urgency Priority Score:
-      - 85–100: EMERGENCY (Tier 1) - Immediate / Same-Day Nephrology Admission
+      - 85–100: EMERGENCY (Tier 1) - Immediate / Same-Day Specialist Renal Admission
       - 65–84:  URGENT (Tier 2)    - Consultation within 7 to 14 Days
       - 40–64:  PRIORITY (Tier 3)  - Review within 30 to 60 Days
       - 0–39:   ROUTINE (Tier 4)   - Annual Primary Care Follow-Up
@@ -362,7 +388,7 @@ def calculate_treatment_priority(
         timeframe = "Immediate / Within 24–48 Hours"
         badge_color = "red"
         protocols = [
-            "Emergency Nephrology Consult: evaluate indications for acute renal replacement therapy (dialysis).",
+            "Emergency Renal Specialist Consult: evaluate indications for acute renal replacement therapy (dialysis).",
             "Urgent hyperkalemia protocol and continuous cardiac telemetry if serum potassium ≥ 5.5 mEq/L.",
             "Vascular access evaluation (Arteriovenous Fistula planning) if patient is stable Stage 5."
         ]
@@ -371,7 +397,7 @@ def calculate_treatment_priority(
         timeframe = "Within 7 to 14 Days"
         badge_color = "orange"
         protocols = [
-            "Comprehensive nephrology outpatient evaluation and metabolic bone disease workup.",
+            "Comprehensive renal outpatient evaluation and metabolic bone disease workup.",
             "Screen for renal anemia; consider ESA therapy initiation if Hemoglobin < 10.0 g/dL.",
             "Initiate strict dietary protein restriction (0.6–0.8 g/kg/day) and sodium restriction (< 2g/day)."
         ]

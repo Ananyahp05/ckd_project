@@ -24,8 +24,14 @@ from models.schemas import (
 )
 from services.preprocessing import preprocess_patient_data
 from services.prediction import predict_ckd
-from services.explainability import explain_prediction
+from services.explainability import (
+    explain_prediction,
+    explain_prediction_shap,
+    explain_prediction_lime,
+    explain_prediction_dual,
+)
 from services.alert_manager import alert_manager
+from services.kafka_service import kafka_service
 from services.fl_manager import fl_manager
 from services.lstm_service import predict_egfr_lstm, lstm_config, lstm_metrics
 from services.hybrid_service import predict_egfr_hybrid, hybrid_config, hybrid_metrics
@@ -122,8 +128,9 @@ async def predict(
         prediction_label = "CKD"  if probability >= 0.5 else "Non-CKD"
         risk_score       = probability * 100.0
 
-        # 4. SHAP explanation
-        explanations = explain_prediction(scaled_features)
+        # 4. Dual Explainable AI (SHAP & LIME)
+        dual_xai = explain_prediction_dual(scaled_features)
+        explanations = dual_xai["shap"]
 
         # 5. Broadcast real-time alert for HIGH-risk predictions (targeted to doctor)
         if risk_level == "HIGH":
@@ -138,6 +145,22 @@ async def predict(
                     doctor_id=current_user.id,
                 )
             )
+
+        # 5b. Stream clinical telemetry into Apache Kafka ('ckd.lab.events')
+        asyncio.create_task(
+            kafka_service.publish_lab_event(
+                patient_id=str(data.patient_id or "UNKNOWN"),
+                biomarker_data={
+                    "age": data.age,
+                    "blood_pressure": data.bp,
+                    "blood_glucose_random": data.bgr,
+                    "blood_urea": data.bu,
+                    "serum_creatinine": data.sc,
+                    "risk_score": round(risk_score, 2),
+                    "prediction": prediction_label,
+                }
+            )
+        )
 
         # 6. Save history to database
         input_dict = data.dict()
@@ -163,12 +186,30 @@ async def predict(
             "risk_score": risk_score,
             "risk_level": risk_level,
             "explanation": explanations,
+            "xai": dual_xai,
         }
 
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POST /predict/dual-xai (Dual Explainable AI: SHAP + LIME)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.post("/predict/dual-xai", tags=["xai"])
+def get_dual_xai_endpoint(
+    data: PatientData,
+    current_user: User = Depends(require_roles("Doctor", "Admin", "Patient"))
+):
+    """
+    Computes Dual XAI: SHAP game-theoretic feature attributions alongside
+    LIME local surrogate perturbation weights, highlighting consensus features.
+    """
+    scaled = preprocess_patient_data(data)
+    return explain_prediction_dual(scaled)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -384,6 +425,31 @@ def ws_status():
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Apache Kafka Real-Time Streaming Telemetry & Diagnostics
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.get("/kafka/status", tags=["kafka"])
+def kafka_status():
+    """Returns the live connection status, broker address, and topic telemetry for Apache Kafka."""
+    return kafka_service.get_status()
+
+
+@router.post("/kafka/test-event", tags=["kafka"])
+async def kafka_test_event():
+    """Publishes a test clinical alert to verify live Apache Kafka event dispatching."""
+    success = await kafka_service.publish_critical_alert({
+        "message": "Manual test event dispatched from EDCIF API",
+        "severity": "TEST_ALERT",
+        "patient_id": "TEST-MRN-999"
+    })
+    return {
+        "status": "success" if success else "fallback_recorded",
+        "kafka_connected": kafka_service._is_connected,
+        "broker": kafka_service.bootstrap_servers
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Federated Learning routes (RBAC-protected)
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -490,7 +556,7 @@ def get_patient_summary(
             "lifestyle_guidelines": [
                 "Maintain healthy hydration: drink approx. 2 liters of water daily unless advised otherwise.",
                 "Sodium moderation: avoid processed foods; maintain daily salt intake under 2 grams.",
-                "Schedule a clinical evaluation with your nephrologist or physician."
+                "Schedule a clinical evaluation with your attending renal specialist or physician."
             ]
         }
 
@@ -952,7 +1018,7 @@ def get_patient_ehr(
         if predicted_egfr and predicted_egfr < 60.0:
             concordance = "High Risk Concordant"
             diagnosis = "Active Chronic Kidney Disease"
-            action = "Urgent nephrology referral: initiate renoprotective regimen (ACEi/ARB or SGLT2i), strict BP control (<130/80 mmHg), and quarterly eGFR monitoring."
+            action = "Urgent renal specialist referral: initiate renoprotective regimen (ACEi/ARB or SGLT2i), strict BP control (<130/80 mmHg), and quarterly eGFR monitoring."
         else:
             concordance = "Moderate Risk / Biochemical Pre-CKD"
             diagnosis = "Biomarker Positive CKD Risk"
@@ -1152,9 +1218,9 @@ def get_admin_overview_stats(
 
     return {
         "hospital": {
-            "name": hospital.name if hospital else "MetroHealth Nephrology & Kidney Institute",
-            "code": hospital.code if hospital else "METRO-NEPHRO-01",
-            "contact_email": hospital.contact_email if hospital else "nephrology@metrohealth.org",
+            "name": hospital.name if hospital else "Clinical Renal & Kidney Health Platform",
+            "code": hospital.code if hospital else "CLINICAL-CKD-01",
+            "contact_email": hospital.contact_email if hospital else "care@hospital.org",
             "phone": hospital.phone if hospital else "+1-800-555-0199"
         },
         "stats": {
@@ -1854,12 +1920,81 @@ def enter_lab_result(
         details=f"Technician {lab_entry.technician_name} recorded {lab_entry.test_name} = {lab_entry.test_value} {lab_entry.unit} ({lab_entry.status})."
     )
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # Automated External Alert Dispatch (Synopsis Phase 7 / Section 8)
+    # Triggered on eGFR < 15 or Serum Creatinine >= 3.0 or CRITICAL status
+    # ─────────────────────────────────────────────────────────────────────────
+    is_critical_lab = (
+        status_flag == "CRITICAL"
+        or ("creatinine" in tname and val >= 3.0)
+        or ("egfr" in tname and val <= 15.0)
+    )
+
+    external_alert_result = None
+    if is_critical_lab:
+        # 1. Real-time Apache Kafka stream dispatch ('ckd.critical.alerts')
+        alert_payload = {
+            "type": "CRITICAL_LAB_MEASUREMENT",
+            "patient_id": pid_clean,
+            "test_name": lab_entry.test_name,
+            "test_value": val,
+            "unit": lab_entry.unit,
+            "status": "CRITICAL",
+            "technician": lab_entry.technician_name,
+            "message": (
+                f"🚨 Critical Lab Alarm: Patient {pid_clean} has {lab_entry.test_name} = {val} {lab_entry.unit}. "
+                "Immediate attending physician triage required."
+            )
+        }
+        asyncio.create_task(kafka_service.publish_critical_alert(alert_payload))
+
+        # 2. In-app WebSocket Broadcast
+        asyncio.create_task(alert_manager.broadcast(alert_payload))
+
+        # 3. Locate assigned attending physician and dispatch automated external email/SMS
+        assignment = db.query(DoctorPatientAssignment).filter(
+            DoctorPatientAssignment.patient_id == pid_clean
+        ).first()
+
+        doc_email = "oncall-physician@hospital.org"
+        doc_name = "Attending Physician"
+        target_user_id = None
+
+        if assignment and assignment.doctor:
+            doc_email = getattr(assignment.doctor, "email", None) or f"{assignment.doctor.username}@hospital.org"
+            doc_name = assignment.doctor.full_name or assignment.doctor.username
+            target_user_id = assignment.doctor_id
+
+        from services.email_service import send_critical_lab_alert_email
+        external_alert_result = send_critical_lab_alert_email(
+            to_email=doc_email,
+            physician_name=doc_name,
+            patient_id=pid_clean,
+            test_name=lab_entry.test_name,
+            test_value=val,
+            unit=lab_entry.unit,
+            status_flag="CRITICAL"
+        )
+
+        # 4. Record persistent in-app physician notification
+        if target_user_id:
+            db.add(Notification(
+                user_id=target_user_id,
+                title="🚨 Critical Laboratory Finding",
+                message=f"Patient {pid_clean}: {lab_entry.test_name} measured at {val} {lab_entry.unit} (CRITICAL).",
+                type="ALERT",
+                is_read=False
+            ))
+            db.commit()
+
     return {
         "status": "success",
         "id": lab_entry.id,
         "patient_id": lab_entry.patient_id,
         "test_name": lab_entry.test_name,
         "status_flag": lab_entry.status,
+        "critical_alert_dispatched": is_critical_lab,
+        "external_alert": external_alert_result,
         "message": "Laboratory test result recorded successfully."
     }
 
@@ -1964,7 +2099,7 @@ def get_patient_personal_records(
         if doc:
             attending_doc = {
                 "name": doc.full_name or f"Dr. {doc.username}",
-                "email": doc.email or "nephrology@metrohealth.org"
+                "email": doc.email or "physician@hospital.org"
             }
 
     # Notifications

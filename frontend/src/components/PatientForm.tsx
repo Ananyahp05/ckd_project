@@ -177,36 +177,37 @@ export default function PatientForm({
   return (
     <>
       <style>{`
-        /* ─── Design tokens ─── */
+        /* ─── Design tokens (Respects Day/Dark Mode via CSS variables) ─── */
         :root {
-          --glass-bg: rgba(15, 23, 42, 0.65);
-          --glass-border: rgba(148, 163, 184, 0.12);
-          --accent-1: #6366f1;
-          --accent-2: #8b5cf6;
-          --accent-glow: rgba(99, 102, 241, 0.35);
+          --glass-bg: var(--bg-surface);
+          --glass-border: var(--border-color);
+          --accent-1: var(--color-primary-accent);
+          --accent-2: #0F766E;
+          --accent-glow: rgba(13, 148, 136, 0.25);
           --warn: #f59e0b;
           --warn-bg: rgba(245, 158, 11, 0.08);
         }
 
         /* ─── Form field helpers ─── */
         .form-field-group { display: flex; flex-direction: column; gap: 2px; }
-        .field-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #94a3b8; }
+        .field-label { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); }
         .field-input {
           margin-top: 4px;
-          padding: 9px 12px;
-          border-radius: 10px;
-          background: rgba(30, 41, 59, 0.8);
-          border: 1px solid rgba(148, 163, 184, 0.15);
-          color: #e2e8f0;
-          font-size: 0.9rem;
+          padding: 10px 14px;
+          border-radius: 8px;
+          background: var(--bg-surface-subtle);
+          border: 1px solid var(--border-color);
+          color: var(--text-primary);
+          font-size: 0.92rem;
           outline: none;
-          transition: border-color 0.2s, box-shadow 0.2s;
+          transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
           width: 100%;
           -webkit-appearance: none;
         }
         .field-input:focus {
-          border-color: var(--accent-1);
+          border-color: var(--color-primary-accent);
           box-shadow: 0 0 0 3px var(--accent-glow);
+          background: var(--bg-surface);
         }
         .field-input--warn {
           border-color: var(--warn);
@@ -217,38 +218,42 @@ export default function PatientForm({
           box-shadow: 0 0 0 3px rgba(245,158,11,0.25);
         }
         .field-select { cursor: pointer; }
-        option { background: #1e293b; }
+        option { background: var(--bg-surface); color: var(--text-primary); }
 
         /* ─── Tab button ─── */
         .tab-btn {
           display: flex; align-items: center; gap: 6px;
-          padding: 8px 18px; border-radius: 50px;
+          padding: 8px 18px; border-radius: 6px;
           font-size: 0.83rem; font-weight: 600;
           border: 1px solid transparent;
-          background: transparent; color: #64748b;
+          background: transparent; color: var(--text-muted);
           cursor: pointer;
           transition: all 0.2s;
           white-space: nowrap;
         }
-        .tab-btn:hover { color: #cbd5e1; background: rgba(148,163,184,0.07); }
+        .tab-btn:hover { color: var(--text-primary); background: var(--bg-surface-subtle); }
         .tab-btn--active {
-          background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-          color: #fff;
-          box-shadow: 0 4px 20px var(--accent-glow);
+          background: var(--color-primary-accent) !important;
+          color: #FFFFFF !important;
+          box-shadow: 0 2px 10px rgba(13, 148, 136, 0.35);
         }
 
         /* ─── Submit button ─── */
         .submit-btn {
           width: 100%; padding: 14px 24px;
-          border-radius: 14px;
+          border-radius: 8px;
           border: none; cursor: pointer;
-          font-size: 1rem; font-weight: 700; letter-spacing: 0.03em;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff;
-          box-shadow: 0 8px 32px rgba(99,102,241,0.3);
-          transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+          font-size: 1rem; font-weight: 700; letter-spacing: 0.02em;
+          background: var(--color-primary-accent);
+          color: #FFFFFF;
+          box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+          transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s, background 0.2s;
         }
-        .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(99,102,241,0.45); }
+        .submit-btn:hover:not(:disabled) {
+          background: #0F766E;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4);
+        }
         .submit-btn:active:not(:disabled) { transform: translateY(0); }
         .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
@@ -272,6 +277,25 @@ export default function PatientForm({
           color: #fca5a5;
           font-size: 0.85rem;
           margin-top: 12px;
+        }
+        .form-card-panel {
+          background: var(--bg-surface);
+          border: 1px solid var(--border-color);
+          border-radius: 16px;
+          padding: 32px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+          width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+          .form-card-panel {
+            padding: 16px 14px !important;
+            border-radius: 10px !important;
+          }
+          .assessment-container {
+            padding: 0 8px !important;
+            gap: 16px !important;
+          }
         }
         /* ─── Responsive Layouts ─── */
         .assessment-layout {
@@ -298,17 +322,17 @@ export default function PatientForm({
         }
       `}</style>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "28px", maxWidth: "1400px", margin: "0 auto", padding: "0 20px" }}>
+      <div className="assessment-container" style={{ display: "flex", flexDirection: "column", gap: "28px", maxWidth: "1400px", margin: "0 auto", padding: "0 20px", width: "100%", boxSizing: "border-box" }}>
         
         {/* ── Clinical Assessment Mode Switcher ── */}
         <div style={{
           display: "flex",
           justifyContent: "center",
           gap: "8px",
-          background: "rgba(15, 23, 42, 0.6)",
+          background: "var(--bg-surface-subtle)",
           padding: "6px",
           borderRadius: "50px",
-          border: "1px solid rgba(148, 163, 184, 0.15)",
+          border: "1px solid var(--border-color)",
           width: "fit-content",
           margin: "0 auto",
           flexWrap: "wrap",
@@ -327,9 +351,9 @@ export default function PatientForm({
               border: "none",
               cursor: "pointer",
               transition: "all 0.2s",
-              background: assessmentMode === "intake" ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "transparent",
-              color: assessmentMode === "intake" ? "#ffffff" : "#94a3b8",
-              boxShadow: assessmentMode === "intake" ? "0 4px 20px rgba(99, 102, 241, 0.35)" : "none",
+              background: assessmentMode === "intake" ? "var(--color-primary-accent)" : "transparent",
+              color: assessmentMode === "intake" ? "#ffffff" : "var(--text-muted)",
+              boxShadow: assessmentMode === "intake" ? "0 2px 10px rgba(13, 148, 136, 0.3)" : "none",
             }}
           >
             <span>📋</span> Comprehensive Biomarker Intake
@@ -348,9 +372,9 @@ export default function PatientForm({
               border: "none",
               cursor: "pointer",
               transition: "all 0.2s",
-              background: assessmentMode === "followup" ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "transparent",
-              color: assessmentMode === "followup" ? "#ffffff" : "#94a3b8",
-              boxShadow: assessmentMode === "followup" ? "0 4px 20px rgba(99, 102, 241, 0.35)" : "none",
+              background: assessmentMode === "followup" ? "var(--color-primary-accent)" : "transparent",
+              color: assessmentMode === "followup" ? "#ffffff" : "var(--text-muted)",
+              boxShadow: assessmentMode === "followup" ? "0 2px 10px rgba(13, 148, 136, 0.3)" : "none",
             }}
           >
             <span>📈</span> Longitudinal Follow-Up Encounters
@@ -369,27 +393,19 @@ export default function PatientForm({
             <div className={`assessment-layout ${result ? 'assessment-layout--split' : ''}`}>
           
           {/* ── Form Panel ── */}
-          <div style={{
-            background: "var(--glass-bg)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid var(--glass-border)",
-            borderRadius: "24px",
-            padding: "32px",
-            boxShadow: "0 25px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)",
-          }}>
+          <div className="form-card-panel">
             {/* Header */}
             <div style={{ marginBottom: "28px" }}>
-              <h2 style={{ fontSize: "1.6rem", fontWeight: 800, background: "linear-gradient(135deg, #a5b4fc, #c084fc)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginBottom: "6px" }}>
+              <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "6px" }}>
                 Clinical Patient Assessment & AI Synthesis
               </h2>
-              <p style={{ fontSize: "0.85rem", color: "#64748b" }}>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
                 Enter clinical biomarkers below. The backend deep learning hybrid framework automatically evaluates binary CKD risk, multi-complication likelihood, progression trajectory, and clinical triage urgency.
               </p>
             </div>
 
             {/* Tab bar */}
-            <div style={{ display: "flex", gap: "6px", marginBottom: "28px", flexWrap: "wrap", padding: "6px", background: "rgba(0,0,0,0.3)", borderRadius: "50px", border: "1px solid rgba(148,163,184,0.08)" }}>
+            <div style={{ display: "flex", gap: "6px", marginBottom: "28px", flexWrap: "wrap", padding: "6px", background: "var(--bg-surface-subtle)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
               {TABS.map(tab => (
                 <button
                   key={tab.id}
@@ -406,14 +422,14 @@ export default function PatientForm({
               {/* Historical reload alert banner */}
               {externalData && (
                 <div style={{
-                  background: "rgba(99,102,241,0.1)",
-                  border: "1px solid rgba(99,102,241,0.3)",
-                  borderRadius: "12px", padding: "12px 16px",
+                  background: "var(--color-primary-subtle)",
+                  border: "1px solid var(--color-primary-border)",
+                  borderRadius: "10px", padding: "12px 16px",
                   marginBottom: "20px", display: "flex",
                   justifyContent: "space-between", alignItems: "center",
-                  fontSize: "0.82rem", color: "#a5b4fc"
+                  fontSize: "0.82rem", color: "var(--color-primary-accent)"
                 }}>
-                  <span>📁 Viewing Saved Record: <strong>{formData.patient_id || "Anonymous"}</strong></span>
+                  <span>📁 Viewing Saved Record: <strong style={{ color: "var(--text-primary)" }}>{formData.patient_id || "Anonymous"}</strong></span>
                   <button
                     type="button"
                     onClick={() => {
@@ -422,8 +438,8 @@ export default function PatientForm({
                       setSubmittedData(null);
                     }}
                     style={{
-                      background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "6px", color: "#fff", padding: "4px 8px", cursor: "pointer", fontSize: "0.75rem"
+                      background: "var(--bg-surface)", border: "1px solid var(--border-color)",
+                      borderRadius: "6px", color: "var(--text-primary)", padding: "4px 8px", cursor: "pointer", fontSize: "0.75rem"
                     }}
                   >
                     Reset Form
@@ -497,10 +513,10 @@ export default function PatientForm({
 
               {/* Tab navigation hint */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "24px", marginBottom: "20px" }}>
-                <span style={{ fontSize: "0.78rem", color: "#475569" }}>
+                <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
                   {activeTab === "vitals" ? "Next: Blood Panel →" : activeTab === "blood" ? "← Vitals  |  Clinical →" : "← Blood Panel"}
                 </span>
-                <span style={{ fontSize: "0.75rem", color: "#475569" }}>
+                <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
                   {activeTab === "vitals" ? "1 / 3" : activeTab === "blood" ? "2 / 3" : "3 / 3"}
                 </span>
               </div>
@@ -526,22 +542,22 @@ export default function PatientForm({
               `}</style>
               {onViewEHR && (
                 <div style={{
-                  background: "linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95))",
-                  border: "1px solid rgba(99, 102, 241, 0.35)",
-                  borderRadius: "16px",
+                  background: "var(--bg-surface-subtle)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "12px",
                   padding: "16px 20px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   flexWrap: "wrap",
                   gap: "12px",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
                 }}>
                   <div>
-                    <div style={{ color: "#f8fafc", fontWeight: 700, fontSize: "0.95rem" }}>
+                    <div style={{ color: "var(--text-primary)", fontWeight: 700, fontSize: "0.95rem" }}>
                       Assessment Synthesized to Patient EHR
                     </div>
-                    <div style={{ color: "#94a3b8", fontSize: "0.78rem" }}>
+                    <div style={{ color: "var(--text-muted)", fontSize: "0.78rem" }}>
                       Inspect longitudinal eGFR trajectory, Tangri KFRE risk, and complication radar for <strong>{formData.patient_id || "this patient"}</strong>.
                     </div>
                   </div>
@@ -549,10 +565,10 @@ export default function PatientForm({
                     type="button"
                     onClick={() => onViewEHR(formData.patient_id || "")}
                     style={{
-                      background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                      background: "var(--color-primary-accent)",
                       color: "#fff",
                       border: "none",
-                      borderRadius: "10px",
+                      borderRadius: "8px",
                       padding: "10px 18px",
                       fontSize: "0.82rem",
                       fontWeight: 700,
@@ -581,17 +597,16 @@ export default function PatientForm({
         {/* If no result yet, show empty state full-width below form */}
         {!result && (
           <div style={{
-            background: "rgba(15,23,42,0.4)",
-            backdropFilter: "blur(12px)",
-            border: "1px dashed rgba(148,163,184,0.2)",
-            borderRadius: "20px",
+            background: "var(--bg-surface-subtle)",
+            border: "1px dashed var(--border-color)",
+            borderRadius: "16px",
             padding: "60px 40px",
             textAlign: "center",
-            color: "#475569",
+            color: "var(--text-muted)",
           }}>
             <div style={{ fontSize: "3rem", marginBottom: "16px", opacity: 0.5 }}>📊</div>
-            <p style={{ fontSize: "1.1rem", fontWeight: 500 }}>Complete the form and click <strong style={{ color: "#818cf8" }}>Run Clinical Assessment & AI Synthesis</strong> to see results.</p>
-            <p style={{ fontSize: "0.82rem", marginTop: "8px", color: "#334155" }}>AI-powered prediction with SHAP feature explanations will appear here.</p>
+            <p style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--text-primary)" }}>Complete the form and click <strong style={{ color: "var(--color-primary-accent)" }}>Run Clinical Assessment & AI Synthesis</strong> to see results.</p>
+            <p style={{ fontSize: "0.82rem", marginTop: "8px", color: "var(--text-muted)" }}>AI-powered prediction with SHAP & LIME feature explanations will appear here.</p>
           </div>
         )}
           </>

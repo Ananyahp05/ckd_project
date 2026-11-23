@@ -65,14 +65,14 @@ def classify_kdigo_stage(egfr: float) -> dict:
         return {
             "stage": "Stage 3b",
             "description": "Moderately to Severely Decreased eGFR (30–44 mL/min/1.73m²)",
-            "clinical_significance": "Significant renal impairment. Active nephrology management, progression slope assessment, and complication screening needed.",
+            "clinical_significance": "Significant renal impairment. Active renal specialist management, progression slope assessment, and complication screening needed.",
             "risk_color": "red",
         }
     elif egfr >= 15.0:
         return {
             "stage": "Stage 4",
             "description": "Severely Decreased eGFR (15–29 mL/min/1.73m²)",
-            "clinical_significance": "Severe loss of kidney function. Specialized nephrology care and renal replacement therapy preparation recommended.",
+            "clinical_significance": "Severe loss of kidney function. Specialized renal care and renal replacement therapy preparation recommended.",
             "risk_color": "red",
         }
     else:

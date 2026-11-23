@@ -144,52 +144,62 @@ export default function LabDashboard({ token }: Props) {
   };
 
   return (
-    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "10px" }}>
+    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "10px" }}>
       <style>{`
         .lab-card {
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 16px;
+          background: var(--bg-surface, #ffffff);
+          border: 1px solid var(--border-color, #e2e8f0);
+          border-radius: 12px;
           padding: 24px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-          color: #0f172a;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+          color: var(--text-primary, #0f172a);
           margin-bottom: 24px;
         }
         .lab-nav {
           display: flex;
           gap: 12px;
-          border-bottom: 2px solid #e2e8f0;
+          border-bottom: 2px solid var(--border-color, #e2e8f0);
           margin-bottom: 20px;
+          overflow-x: auto;
+          white-space: nowrap;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 2px;
         }
         .lab-tab-btn {
-          padding: 10px 20px;
+          padding: 10px 16px;
           font-weight: 700;
           font-size: 0.9rem;
           background: none;
           border: none;
           border-bottom: 3px solid transparent;
-          color: #64748b;
+          color: var(--text-muted, #64748b);
           cursor: pointer;
           transition: all 0.2s;
+          white-space: nowrap;
+          min-height: 44px;
+        }
+        @media (max-width: 600px) {
+          .lab-card {
+            padding: 16px 14px;
+          }
         }
         .lab-tab-btn--active {
-          color: #0284c7;
-          border-bottom-color: #0284c7;
+          color: var(--color-primary-accent);
+          border-bottom-color: var(--color-primary-accent);
         }
         .lab-input {
           width: 100%;
           padding: 10px 14px;
-          border-radius: 10px;
-          border: 1px solid #cbd5e1;
+          border-radius: 6px;
+          border: 1px solid var(--border-color);
           font-size: 0.9rem;
-          color: #0f172a;
-          background: #f8fafc;
+          color: var(--text-primary);
+          background: var(--bg-surface);
           outline: none;
         }
         .lab-input:focus {
-          border-color: #0284c7;
-          background: #ffffff;
-          box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+          border-color: var(--color-primary-accent);
+          box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
         }
         .lab-table {
           width: 100%;
@@ -199,31 +209,34 @@ export default function LabDashboard({ token }: Props) {
         .lab-table th {
           text-align: left;
           padding: 12px 14px;
-          background: #f1f5f9;
-          color: #475569;
-          font-weight: 700;
-          border-bottom: 2px solid #e2e8f0;
+          background: var(--bg-surface-subtle);
+          color: var(--text-primary);
+          font-weight: 600;
+          font-size: 0.76rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border-bottom: 1px solid var(--border-color);
         }
         .lab-table td {
           padding: 12px 14px;
-          border-bottom: 1px solid #f1f5f9;
-          color: #1e293b;
+          border-bottom: 1px solid var(--border-color);
+          color: var(--text-secondary);
         }
         .badge-status {
           display: inline-block;
-          padding: 3px 10px;
-          border-radius: 50px;
-          font-size: 0.72rem;
-          font-weight: 700;
+          padding: 3px 8px;
+          border-radius: 4px;
+          font-size: 0.74rem;
+          font-weight: 600;
         }
-        .badge-status--NORMAL { background: #dcfce7; color: #166534; }
-        .badge-status--ELEVATED { background: #fee2e2; color: #991b1b; }
-        .badge-status--CRITICAL { background: #991b1b; color: #ffffff; }
+        .badge-status--NORMAL { background: var(--risk-low-bg); color: var(--risk-low); border: 1px solid var(--risk-low-border); }
+        .badge-status--ELEVATED { background: var(--risk-high-bg); color: var(--risk-high); border: 1px solid var(--risk-high-border); }
+        .badge-status--CRITICAL { background: var(--risk-high-bg); color: var(--risk-high); border: 1px solid var(--risk-high-border); }
         .badge-status--LOW { background: #fef9c3; color: #854d0e; }
       `}</style>
 
       {/* Header */}
-      <div className="lab-card" style={{ background: "linear-gradient(135deg, #0284c7, #0369a1)", color: "#ffffff" }}>
+      <div className="lab-card" style={{ background: "var(--color-primary-accent)", color: "#ffffff" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -308,7 +321,7 @@ export default function LabDashboard({ token }: Props) {
         {/* Tab 1: Enter Result */}
         {activeSubTab === "enter" && (
           <form onSubmit={handleSubmitResult}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "18px", marginBottom: "18px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))", gap: "18px", marginBottom: "18px" }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
                   Select Patient (MRN):
@@ -425,15 +438,15 @@ export default function LabDashboard({ token }: Props) {
             <button
               type="submit"
               style={{
-                background: "linear-gradient(135deg, #0284c7, #0369a1)",
+                background: "var(--theme-navy, #1E3A8A)",
                 color: "#ffffff",
                 border: "none",
-                borderRadius: "10px",
+                borderRadius: "8px",
                 padding: "12px 28px",
                 fontSize: "0.95rem",
                 fontWeight: 700,
                 cursor: "pointer",
-                boxShadow: "0 4px 14px rgba(2, 132, 199, 0.35)",
+                boxShadow: "0 4px 14px rgba(30, 58, 138, 0.25)",
               }}
             >
               💾 Record & Validate Lab Result
@@ -468,12 +481,12 @@ export default function LabDashboard({ token }: Props) {
                   requests.map((r) => (
                     <tr key={r.id}>
                       <td style={{ fontWeight: 700 }}>#{r.id}</td>
-                      <td style={{ fontWeight: 700, color: "#0284c7" }}>{r.patient_id}</td>
+                      <td style={{ fontWeight: 700, color: "var(--theme-navy, #1E3A8A)" }}>{r.patient_id}</td>
                       <td>{r.doctor_name || `Dr. #${r.doctor_id}`}</td>
                       <td>{r.test_type}</td>
                       <td>
                         <span style={{
-                          color: r.priority === "STAT" ? "#dc2626" : r.priority === "Urgent" ? "#ea580c" : "#2563eb",
+                          color: r.priority === "STAT" ? "#DC2626" : r.priority === "Urgent" ? "#ea580c" : "var(--theme-navy, #1E3A8A)",
                           fontWeight: 700,
                           fontSize: "0.8rem"
                         }}>
@@ -495,19 +508,19 @@ export default function LabDashboard({ token }: Props) {
                                 handleTestPresetChange("Serum Creatinine");
                                 setActiveSubTab("enter");
                               }}
-                              style={{ background: "#0284c7", color: "#fff", border: "none", padding: "4px 8px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer" }}
+                              style={{ background: "var(--theme-navy, #1E3A8A)", color: "#fff", border: "none", padding: "6px 12px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer" }}
                             >
                               Enter Result
                             </button>
                             <button
                               onClick={() => handleCompleteRequest(r.id)}
-                              style={{ background: "#059669", color: "#fff", border: "none", padding: "4px 8px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer" }}
+                              style={{ background: "#16A34A", color: "#fff", border: "none", padding: "6px 12px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer" }}
                             >
                               Done
                             </button>
                           </div>
                         ) : (
-                          <span style={{ fontSize: "0.8rem", color: "#059669" }}>✓ Completed</span>
+                          <span style={{ fontSize: "0.8rem", color: "#16A34A" }}>✓ Completed</span>
                         )}
                       </td>
                     </tr>
@@ -543,7 +556,7 @@ export default function LabDashboard({ token }: Props) {
                 ) : (
                   history.map((t) => (
                     <tr key={t.id}>
-                      <td style={{ fontWeight: 700, color: "#0284c7" }}>{t.patient_id}</td>
+                      <td style={{ fontWeight: 700, color: "var(--theme-navy, #1E3A8A)" }}>{t.patient_id}</td>
                       <td style={{ fontWeight: 600 }}>{t.test_name}</td>
                       <td style={{ fontWeight: 700 }}>
                         {t.test_value} <span style={{ fontSize: "0.75rem", color: "#64748b" }}>{t.unit}</span>

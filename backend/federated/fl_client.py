@@ -34,7 +34,7 @@ def make_dummy_data(client_id: int, n_samples: int = 120):
     Partitions realistic non-IID clinical CKD patient records for each simulated hospital node.
     Hospital 1 (client_id 0): Academic tertiary care hospital (higher CKD prevalence, complex comorbidities).
     Hospital 2 (client_id 1): Community regional clinic (moderate CKD, general screening cohort).
-    Hospital 3 (client_id 2): Primary rural nephrology satellite (hypertensive and diabetic profiles).
+    Hospital 3 (client_id 2): Primary rural kidney care satellite (hypertensive and diabetic profiles).
     """
     try:
         from training.data_generator import generate_uci_cohort

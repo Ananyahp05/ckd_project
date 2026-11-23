@@ -131,6 +131,13 @@ class AlertManager:
         await self.broadcast(payload)
         print(f"[WS] Alert broadcast to {self.connection_count} client(s) — score={risk_score:.1f}%")
 
+        # Asynchronously dispatch critical alert to Apache Kafka broker
+        try:
+            from services.kafka_service import kafka_service
+            asyncio.create_task(kafka_service.publish_critical_alert(payload))
+        except Exception as kafka_err:
+            print(f"[KAFKA] Non-fatal alert dispatch warning: {kafka_err}")
+
     async def broadcast_ping(self) -> None:
         """Lightweight keep-alive ping sent to all clients."""
         await self.broadcast({"type": "ping", "timestamp": datetime.now(timezone.utc).isoformat()})
