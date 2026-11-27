@@ -163,32 +163,30 @@ export default function FederatedDashboard({ token }: Props) {
           .fl-grid { grid-template-columns: 1fr; }
         }
         .console-box {
-          background: #020617;
-          border: 1px solid rgba(148, 163, 184, 0.1);
-          border-radius: 12px;
+          background: #0B1220;
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
           padding: 16px;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 0.78rem;
-          color: #10b981;
+          color: #4ADE80;
           height: 250px;
           overflow-y: auto;
           white-space: pre-wrap;
-          box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);
         }
         .progress-bar-container {
-          background: rgba(30, 41, 59, 0.6);
-          border-radius: 50px;
+          background: var(--bg-surface-subtle);
+          border-radius: 999px;
           height: 10px;
           overflow: hidden;
           position: relative;
           margin-top: 10px;
-          border: 1px solid rgba(255,255,255,0.05);
+          border: 1px solid var(--border-color);
         }
         .progress-bar-fill {
-          background: linear-gradient(90deg, #6366f1, #8b5cf6);
+          background: var(--color-primary-accent);
           height: 100%;
-          transition: width 0.4s ease;
-          box-shadow: 0 0 10px rgba(99,102,241,0.5);
+          transition: width 0.3s ease;
         }
         .console-line {
           margin-bottom: 4px;
@@ -381,11 +379,10 @@ export default function FederatedDashboard({ token }: Props) {
             ) : (
               <div style={{
                 height: "100%", display: "flex", flexDirection: "column", justifyContent: "center",
-                alignItems: "center", border: "1px dashed rgba(148,163,184,0.15)", borderRadius: "12px",
-                color: "#475569", fontSize: "0.85rem",
+                alignItems: "center", border: "1px dashed var(--border-color)", borderRadius: "12px",
+                color: "var(--text-muted)", fontSize: "0.85rem",
               }}>
-                <div style={{ fontSize: "2rem", marginBottom: "8px" }}>📈</div>
-                <span>No simulation history recorded yet.</span>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600 }}>No simulation history recorded yet.</span>
               </div>
             )}
           </div>

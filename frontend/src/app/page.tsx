@@ -27,9 +27,10 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    const saved = (localStorage.getItem("edcif_theme") as "light" | "dark") || "light";
-    setTheme(saved);
-    document.documentElement.setAttribute("data-theme", saved);
+    const saved = localStorage.getItem("edcif_theme") as "light" | "dark" | null;
+    const preferred = saved ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    setTheme(preferred);
+    document.documentElement.setAttribute("data-theme", preferred);
   }, []);
 
   const toggleTheme = () => {
@@ -50,6 +51,7 @@ export default function Home() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [authSuccess, setAuthSuccess] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showRegPassword, setShowRegPassword] = useState(false);
 
   const fetchProfile = async (authToken: string) => {
     try {
@@ -177,7 +179,6 @@ export default function Home() {
       {/* ── SHARED APPLICATION HEADER (from Header.tsx) ── */}
       <Header
         user={user}
-        userRole={userRole}
         theme={theme}
         onToggleTheme={toggleTheme}
         onLogout={handleLogout}
@@ -188,23 +189,66 @@ export default function Home() {
 
         {/* ── A. GUEST AUTHENTICATION PORTAL (CLEAN LOGIN / REGISTRATION CARD) ── */}
         {!user && (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flex: 1,
-            minHeight: "calc(100vh - 160px)",
-            padding: "24px 16px",
-            width: "100%",
-            boxSizing: "border-box",
-          }}>
+          <div
+            className="landing-hero-surface"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+              minHeight: "calc(100vh - 160px)",
+              padding: "32px 16px",
+              width: "100%",
+              boxSizing: "border-box",
+            }}
+          >
+            {/* Subtle Federated-Learning Network Lattice SVG Backdrop */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 1200 600"
+              preserveAspectRatio="xMidYMid slice"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
+                opacity: theme === "dark" ? 0.16 : 0.35,
+              }}
+            >
+              <g stroke="var(--color-primary-accent)" strokeWidth="1" strokeOpacity="0.22" fill="none">
+                <line x1="120" y1="120" x2="340" y2="220" />
+                <line x1="340" y1="220" x2="220" y2="440" />
+                <line x1="120" y1="120" x2="220" y2="440" />
+                <line x1="340" y1="220" x2="600" y2="140" />
+                <line x1="860" y1="180" x2="1080" y2="110" />
+                <line x1="860" y1="180" x2="980" y2="430" />
+                <line x1="1080" y1="110" x2="980" y2="430" />
+                <line x1="600" y1="140" x2="860" y2="180" />
+                <line x1="220" y1="440" x2="600" y2="490" />
+                <line x1="600" y1="490" x2="980" y2="430" />
+              </g>
+              <g fill="var(--color-primary-accent)" fillOpacity="0.3">
+                <circle cx="120" cy="120" r="4" />
+                <circle cx="340" cy="220" r="5" />
+                <circle cx="220" cy="440" r="4" />
+                <circle cx="600" cy="140" r="4" />
+                <circle cx="860" cy="180" r="5" />
+                <circle cx="1080" cy="110" r="4" />
+                <circle cx="980" cy="430" r="4" />
+                <circle cx="600" cy="490" r="4" />
+              </g>
+            </svg>
+
             <div style={{
+              position: "relative",
+              zIndex: 1,
               background: "var(--bg-surface)",
               border: "1px solid var(--border-color)",
-              borderRadius: "14px",
+              borderRadius: "12px",
               padding: "32px 24px",
-              boxShadow: "0 4px 24px rgba(0, 0, 0, 0.05)",
-              maxWidth: "520px",
+              boxShadow: theme === "dark" ? "none" : "0 8px 28px rgba(15, 23, 42, 0.06)",
+              maxWidth: "480px",
               width: "100%",
               boxSizing: "border-box",
             }}>
@@ -235,7 +279,7 @@ export default function Home() {
                     transition: "all 0.15s"
                   }}
                 >
-                  Staff & Patient Sign In
+                  Sign In
                 </button>
                 <button
                   type="button"
@@ -254,7 +298,7 @@ export default function Home() {
                     transition: "all 0.15s"
                   }}
                 >
-                  Patient Self-Registration
+                  Register
                 </button>
               </div>
 
@@ -278,7 +322,7 @@ export default function Home() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. doctor@hospital.org or admin@hospital.org"
+                      placeholder="user@gmail.com"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       className="clinical-input"
@@ -287,26 +331,50 @@ export default function Home() {
                   </div>
 
                   <div style={{ marginBottom: "24px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                      <label style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
-                        Password:
-                      </label>
+                    <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px" }}>
+                      Password:
+                    </label>
+                    <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••••••"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        className="clinical-input"
+                        style={{ paddingRight: "42px" }}
+                        required
+                      />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        style={{ background: "none", border: "none", color: "var(--color-primary-accent)", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        title={showPassword ? "Hide password" : "Show password"}
+                        style={{
+                          position: "absolute",
+                          right: "10px",
+                          background: "none",
+                          border: "none",
+                          color: "var(--text-muted)",
+                          cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "4px",
+                        }}
                       >
-                        {showPassword ? "Hide" : "Show"}
+                        {showPassword ? (
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                          </svg>
+                        ) : (
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
                       </button>
                     </div>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••••••"
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      className="clinical-input"
-                      required
-                    />
                   </div>
 
                   <button
@@ -353,15 +421,48 @@ export default function Home() {
                     <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px" }}>
                       Create Secure Password:
                     </label>
-                    <input
-                      type="password"
-                      placeholder="Minimum 6 characters"
-                      value={regPassword}
-                      onChange={(e) => setRegPassword(e.target.value)}
-                      className="clinical-input"
-                      required
-                      minLength={6}
-                    />
+                    <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                      <input
+                        type={showRegPassword ? "text" : "password"}
+                        placeholder="Minimum 6 characters"
+                        value={regPassword}
+                        onChange={(e) => setRegPassword(e.target.value)}
+                        className="clinical-input"
+                        style={{ paddingRight: "42px" }}
+                        required
+                        minLength={6}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegPassword(!showRegPassword)}
+                        aria-label={showRegPassword ? "Hide password" : "Show password"}
+                        title={showRegPassword ? "Hide password" : "Show password"}
+                        style={{
+                          position: "absolute",
+                          right: "10px",
+                          background: "none",
+                          border: "none",
+                          color: "var(--text-muted)",
+                          cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "4px",
+                        }}
+                      >
+                        {showRegPassword ? (
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                          </svg>
+                        ) : (
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </div>
 
                   <button
@@ -370,12 +471,10 @@ export default function Home() {
                     className="btn-primary-teal"
                     style={{ width: "100%", padding: "12px", minHeight: "44px", fontSize: "0.92rem", fontWeight: 700 }}
                   >
-                    {authLoading ? "Creating Account..." : "Create Verified Patient Account"}
+                    {authLoading ? "Creating Account..." : "Create Account"}
                   </button>
 
-                  <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "14px", lineHeight: "1.4", textAlign: "center" }}>
-                    Notice: Public registration automatically establishes a Patient medical record. Staff accounts are provisioned exclusively by Hospital Administration.
-                  </p>
+                 
                 </form>
               )}
 
@@ -392,7 +491,7 @@ export default function Home() {
 
         {/* 2. Administrator Workspace (Clean Left Sidepanel, Clickable Doctors & Patients Tables with Detail Views) */}
         {userRole === "admin" && token && (
-          <AdminDashboard token={token} />
+          <AdminDashboard token={token} adminProfile={user ?? undefined} />
         )}
 
         {/* 3. Lab Technician Workspace */}
@@ -413,7 +512,7 @@ export default function Home() {
       </main>
 
       {/* ── SHARED APPLICATION FOOTER (from Footer.tsx) ── */}
-      <Footer />
+      <Footer isLanding={!user} />
     </div>
   );
 }

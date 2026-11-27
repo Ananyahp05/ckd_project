@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "@/lib/api";
+import { FlaskIcon, ClipboardIcon, FolderIcon, CheckCircleIcon, AlertTriangleIcon } from "./Icons";
 
 type Props = {
   token: string;
@@ -240,45 +241,45 @@ export default function LabDashboard({ token }: Props) {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "2rem" }}>🧪</span>
-              <h2 style={{ fontSize: "1.6rem", fontWeight: 800, margin: 0, color: "#ffffff" }}>
+              <FlaskIcon size={24} />
+              <h2 style={{ fontSize: "1.45rem", fontWeight: 600, margin: 0, color: "#ffffff" }}>
                 Laboratory Information System & Diagnostic Entry
               </h2>
             </div>
-            <p style={{ margin: "6px 0 0 0", color: "#e0f2fe", fontSize: "0.88rem" }}>
+            <p style={{ margin: "6px 0 0 0", color: "rgba(255, 255, 255, 0.88)", fontSize: "0.88rem" }}>
               Authorized laboratory technician console for verifying renal biomarkers, recording standardized LOINC measurements, and managing doctor orders.
             </p>
           </div>
           <button
             onClick={loadData}
             style={{
-              background: "rgba(255, 255, 255, 0.2)",
+              background: "rgba(255, 255, 255, 0.16)",
               color: "#ffffff",
-              border: "1px solid rgba(255, 255, 255, 0.4)",
+              border: "1px solid rgba(255, 255, 255, 0.35)",
               padding: "8px 16px",
-              borderRadius: "10px",
-              fontWeight: 700,
+              borderRadius: "8px",
+              fontWeight: 600,
               cursor: "pointer",
             }}
           >
-            🔄 Refresh
+            Refresh
           </button>
         </div>
 
         {/* Stats Row */}
         {stats && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "16px", marginTop: "24px" }}>
-            <div style={{ background: "rgba(255, 255, 255, 0.15)", padding: "14px", borderRadius: "12px" }}>
-              <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "#bae6fd" }}>Pending Orders</div>
-              <div style={{ fontSize: "1.6rem", fontWeight: 800 }}>{stats.pending_requests_count}</div>
+            <div style={{ background: "rgba(255, 255, 255, 0.14)", padding: "14px", borderRadius: "10px" }}>
+              <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.04em", color: "rgba(255, 255, 255, 0.85)" }}>Pending Orders</div>
+              <div className="tabular-figure" style={{ fontSize: "1.6rem", fontWeight: 600 }}>{stats.pending_requests_count}</div>
             </div>
-            <div style={{ background: "rgba(255, 255, 255, 0.15)", padding: "14px", borderRadius: "12px" }}>
-              <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "#bae6fd" }}>Completed Orders</div>
-              <div style={{ fontSize: "1.6rem", fontWeight: 800 }}>{stats.completed_requests_count}</div>
+            <div style={{ background: "rgba(255, 255, 255, 0.14)", padding: "14px", borderRadius: "10px" }}>
+              <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.04em", color: "rgba(255, 255, 255, 0.85)" }}>Completed Orders</div>
+              <div className="tabular-figure" style={{ fontSize: "1.6rem", fontWeight: 600 }}>{stats.completed_requests_count}</div>
             </div>
-            <div style={{ background: "rgba(255, 255, 255, 0.15)", padding: "14px", borderRadius: "12px" }}>
-              <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "#bae6fd" }}>Total Tests Recorded</div>
-              <div style={{ fontSize: "1.6rem", fontWeight: 800 }}>{stats.total_tests_entered}</div>
+            <div style={{ background: "rgba(255, 255, 255, 0.14)", padding: "14px", borderRadius: "10px" }}>
+              <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.04em", color: "rgba(255, 255, 255, 0.85)" }}>Total Tests Recorded</div>
+              <div className="tabular-figure" style={{ fontSize: "1.6rem", fontWeight: 600 }}>{stats.total_tests_entered}</div>
             </div>
           </div>
         )}
@@ -290,31 +291,39 @@ export default function LabDashboard({ token }: Props) {
           <button
             onClick={() => setActiveSubTab("enter")}
             className={`lab-tab-btn ${activeSubTab === "enter" ? "lab-tab-btn--active" : ""}`}
+            style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
           >
-            📝 Enter New Lab Result
+            <FlaskIcon size={15} />
+            <span>Enter New Lab Result</span>
           </button>
           <button
             onClick={() => setActiveSubTab("requests")}
             className={`lab-tab-btn ${activeSubTab === "requests" ? "lab-tab-btn--active" : ""}`}
+            style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
           >
-            📋 Doctor Orders & Requests ({requests.filter(r => r.status === "Pending").length})
+            <ClipboardIcon size={15} />
+            <span>Doctor Orders & Requests ({requests.filter(r => r.status === "Pending").length})</span>
           </button>
           <button
             onClick={() => setActiveSubTab("history")}
             className={`lab-tab-btn ${activeSubTab === "history" ? "lab-tab-btn--active" : ""}`}
+            style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
           >
-            📁 Historical Test Log ({history.length})
+            <FolderIcon size={15} />
+            <span>Historical Test Log ({history.length})</span>
           </button>
         </div>
 
         {successMsg && (
-          <div style={{ background: "#dcfce7", color: "#166534", padding: "12px 16px", borderRadius: "10px", marginBottom: "16px", fontWeight: 600 }}>
-            ✅ {successMsg}
+          <div style={{ background: "var(--risk-low-bg)", color: "var(--risk-low)", border: "1px solid var(--risk-low-border)", padding: "12px 16px", borderRadius: "8px", marginBottom: "16px", fontWeight: 600, display: "flex", alignItems: "center", gap: "8px" }}>
+            <CheckCircleIcon size={16} />
+            <span>{successMsg}</span>
           </div>
         )}
         {errorMsg && (
-          <div style={{ background: "#fee2e2", color: "#991b1b", padding: "12px 16px", borderRadius: "10px", marginBottom: "16px", fontWeight: 600 }}>
-            ⚠️ {errorMsg}
+          <div style={{ background: "var(--risk-high-bg)", color: "var(--risk-high)", border: "1px solid var(--risk-high-border)", padding: "12px 16px", borderRadius: "8px", marginBottom: "16px", fontWeight: 600, display: "flex", alignItems: "center", gap: "8px" }}>
+            <AlertTriangleIcon size={16} />
+            <span>{errorMsg}</span>
           </div>
         )}
 

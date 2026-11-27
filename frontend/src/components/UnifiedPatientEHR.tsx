@@ -775,11 +775,11 @@ export default function UnifiedPatientEHR({ token, initialPatientId, onNavigateT
                   <span style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--risk-low)" }}>
                     <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--risk-low)" }} /> Observed eGFR
                   </span>
-                  <span style={{ display: "flex", alignItems: "center", gap: "6px", color: "#8b5cf6" }}>
-                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#8b5cf6" }} /> Projected Trajectory
-                  </span>
                   <span style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--color-primary-accent)" }}>
-                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-primary-accent)" }} /> Synthesized Forecast
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-primary-accent)" }} /> Projected Trajectory
+                  </span>
+                  <span style={{ display: "flex", alignItems: "center", gap: "6px", color: "#0284C7" }}>
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#0284C7" }} /> Synthesized Forecast
                   </span>
                 </div>
               </div>
@@ -800,9 +800,9 @@ export default function UnifiedPatientEHR({ token, initialPatientId, onNavigateT
                       <ReferenceLine y={60} stroke="#eab308" strokeDasharray="4 4" label={{ value: "G2 Mild (60)", fill: "#eab308", fontSize: 10, position: "insideTopRight" }} />
                       <ReferenceLine y={30} stroke="#ef4444" strokeDasharray="4 4" label={{ value: "G3b Severe (30)", fill: "#ef4444", fontSize: 10, position: "insideTopRight" }} />
 
-                      <Line type="monotone" dataKey="observed" stroke="#22c55e" strokeWidth={3} dot={{ r: 5, fill: "#22c55e" }} name="Observed eGFR" connectNulls />
-                      <Line type="monotone" dataKey="lstm" stroke="#8b5cf6" strokeWidth={3} strokeDasharray="5 5" dot={{ r: 6, fill: "#8b5cf6" }} name="LSTM Projected" connectNulls />
-                      <Line type="monotone" dataKey="hybrid" stroke="#0D9488" strokeWidth={3} strokeDasharray="5 5" dot={{ r: 6, fill: "#0D9488" }} name="Hybrid Projected" connectNulls />
+                      <Line type="monotone" dataKey="observed" stroke="#15803D" strokeWidth={2.5} dot={{ r: 5, fill: "#15803D" }} name="Observed eGFR" connectNulls />
+                      <Line type="monotone" dataKey="lstm" stroke="#1D4ED8" strokeWidth={2.5} strokeDasharray="5 5" dot={{ r: 5, fill: "#1D4ED8" }} name="LSTM Projected" connectNulls />
+                      <Line type="monotone" dataKey="hybrid" stroke="#0284C7" strokeWidth={2.5} strokeDasharray="5 5" dot={{ r: 5, fill: "#0284C7" }} name="Hybrid Projected" connectNulls />
                     </LineChart>
                   </ResponsiveContainer>
                 ) : (

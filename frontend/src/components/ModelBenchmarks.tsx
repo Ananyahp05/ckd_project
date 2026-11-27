@@ -99,49 +99,49 @@ export default function ModelBenchmarks({ token }: Props) {
             onClick={() => setActiveSubTab("matrix")}
             style={{
               padding: "8px 18px",
-              borderRadius: "50px",
+              borderRadius: "8px",
               fontSize: "0.82rem",
-              fontWeight: 700,
+              fontWeight: 600,
               border: "none",
               cursor: "pointer",
-              transition: "all 0.2s",
-              background: activeSubTab === "matrix" ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "transparent",
-              color: activeSubTab === "matrix" ? "#ffffff" : "#94a3b8",
+              transition: "background-color 0.15s ease, color 0.15s ease",
+              background: activeSubTab === "matrix" ? "var(--color-primary-accent)" : "transparent",
+              color: activeSubTab === "matrix" ? "#ffffff" : "var(--text-muted)",
             }}
           >
-            📊 Architecture Matrix & Test Metrics
+            Architecture Matrix & Test Metrics
           </button>
           <button
             onClick={() => setActiveSubTab("lstm_lab")}
             style={{
               padding: "8px 18px",
-              borderRadius: "50px",
+              borderRadius: "8px",
               fontSize: "0.82rem",
-              fontWeight: 700,
+              fontWeight: 600,
               border: "none",
               cursor: "pointer",
-              transition: "all 0.2s",
-              background: activeSubTab === "lstm_lab" ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "transparent",
-              color: activeSubTab === "lstm_lab" ? "#ffffff" : "#94a3b8",
+              transition: "background-color 0.15s ease, color 0.15s ease",
+              background: activeSubTab === "lstm_lab" ? "var(--color-primary-accent)" : "transparent",
+              color: activeSubTab === "lstm_lab" ? "#ffffff" : "var(--text-muted)",
             }}
           >
-            📈 Sequential LSTM Model Probe
+            Sequential LSTM Model Probe
           </button>
           <button
             onClick={() => setActiveSubTab("hybrid_lab")}
             style={{
               padding: "8px 18px",
-              borderRadius: "50px",
+              borderRadius: "8px",
               fontSize: "0.82rem",
-              fontWeight: 700,
+              fontWeight: 600,
               border: "none",
               cursor: "pointer",
-              transition: "all 0.2s",
-              background: activeSubTab === "hybrid_lab" ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "transparent",
-              color: activeSubTab === "hybrid_lab" ? "#ffffff" : "#94a3b8",
+              transition: "background-color 0.15s ease, color 0.15s ease",
+              background: activeSubTab === "hybrid_lab" ? "var(--color-primary-accent)" : "transparent",
+              color: activeSubTab === "hybrid_lab" ? "#ffffff" : "var(--text-muted)",
             }}
           >
-            🧬 Dual-Branch Hybrid Model Probe
+            Dual-Branch Hybrid Model Probe
           </button>
         </div>
       </div>

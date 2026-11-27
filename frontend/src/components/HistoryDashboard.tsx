@@ -7,6 +7,7 @@ import {
   ResponsiveContainer, Cell, CartesianGrid,
 } from "recharts";
 import ClinicalReportModal, { ClinicalReportData } from "./ClinicalReportModal";
+import { FolderIcon, ChartBarIcon, StethoscopeIcon, ClipboardIcon, ActivityIcon, AlertTriangleIcon } from "./Icons";
 
 type PredictionHistoryRecord = {
   id: number;
@@ -274,10 +275,10 @@ export default function HistoryDashboard({ token, onSelectPatient, onViewEHR }: 
               <span className="spinner" /> Loading Diagnostic Records...
             </div>
           ) : errorMsg ? (
-            <div className="error-box">⚠ {errorMsg}</div>
+            <div className="error-box" style={{ display: "flex", alignItems: "center", gap: "8px" }}><AlertTriangleIcon size={16} /> {errorMsg}</div>
           ) : filteredHistory.length === 0 ? (
             <div style={{ padding: "60px 40px", textAlign: "center", color: "var(--text-muted)", border: "1px dashed var(--border-color)", borderRadius: "12px" }}>
-              <div style={{ fontSize: "2rem", marginBottom: "8px" }}>📁</div>
+              <div style={{ display: "inline-flex", padding: "10px", borderRadius: "10px", background: "var(--color-primary-subtle)", color: "var(--color-primary-accent)", marginBottom: "8px" }}><FolderIcon size={24} /></div>
               <p style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--text-primary)" }}>No prediction records found.</p>
               <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "4px" }}>Diagnose a patient using the Patient Assessment form to populate historical audits.</p>
             </div>
@@ -327,22 +328,22 @@ export default function HistoryDashboard({ token, onSelectPatient, onViewEHR }: 
                               <button
                                 onClick={() => onViewEHR(item.patient_id)}
                                 className="inspect-btn"
-                                style={{ background: "rgba(56, 189, 248, 0.12)", color: "#0284c7", borderColor: "rgba(56, 189, 248, 0.3)" }}
+                                style={{ background: "var(--color-primary-subtle)", color: "var(--color-primary-accent)", borderColor: "var(--color-primary-border)", display: "inline-flex", alignItems: "center", gap: "4px" }}
                                 title="Open full Unified Patient EHR Chart"
                               >
-                                🩺 EHR
+                                <StethoscopeIcon size={13} /> EHR
                               </button>
                             )}
                             <button
                               onClick={() => handleOpenPdfReport(item)}
                               className="inspect-btn"
-                              style={{ background: "rgba(2, 132, 199, 0.1)", color: "#0284c7", borderColor: "rgba(2, 132, 199, 0.3)" }}
+                              style={{ background: "var(--color-primary-subtle)", color: "var(--color-primary-accent)", borderColor: "var(--color-primary-border)", display: "inline-flex", alignItems: "center", gap: "4px" }}
                               title="Export official clinical PDF report"
                             >
-                              📄 PDF
+                              <ClipboardIcon size={13} /> PDF
                             </button>
-                            <button onClick={() => handleInspect(item)} className="inspect-btn" title="Re-load inputs into assessment form">
-                              ⚕ Re-inspect
+                            <button onClick={() => handleInspect(item)} className="inspect-btn" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }} title="Re-load inputs into assessment form">
+                              <ActivityIcon size={13} /> Re-inspect
                             </button>
                           </div>
                         </td>
@@ -392,7 +393,7 @@ export default function HistoryDashboard({ token, onSelectPatient, onViewEHR }: 
                 alignItems: "center", border: "1px dashed var(--border-color)", borderRadius: "12px",
                 color: "var(--text-muted)", fontSize: "0.85rem",
               }}>
-                <div style={{ fontSize: "2rem", marginBottom: "8px" }}>📊</div>
+                <div style={{ display: "inline-flex", padding: "10px", borderRadius: "10px", background: "var(--color-primary-subtle)", color: "var(--color-primary-accent)", marginBottom: "8px" }}><ChartBarIcon size={24} /></div>
                 <span>No global SHAP analytics recorded.</span>
               </div>
             )}

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
-/* ─── UNSLOP CLINICAL DESIGN SYSTEM: Clinical Teal (#0D9488) & Crisp White (#FFFFFF) & Deep Navy (#0F172A) ─── */
+/* ─── CLINICAL BLUE & WHITE DESIGN SYSTEM (Light & Dark Navy Modes) ─── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -9,69 +9,83 @@
 }
 
 :root {
-  /* ── DAY / LIGHT CLINICAL PALETTE ── */
-  --color-primary-accent: #0D9488; /* Clinical Teal */
-  --color-primary-hover:  #0F766E; /* Darker Teal */
-  --color-primary-subtle: #F0FDFA; /* Teal 50 */
-  --color-primary-border: #CCFBF1; /* Teal 100 */
+  /* ── DAY / LIGHT CLINICAL PALETTE (Blue & White) ── */
+  --color-primary-accent: #1D4ED8; /* Medical Royal Blue */
+  --color-primary-hover:  #1E40AF; /* Deeper Royal Blue */
+  --color-primary-subtle: #EFF6FF; /* Pale Blue 50 */
+  --color-primary-border: #BFDBFE; /* Blue 200 */
 
-  --bg-app:              #F8FAFC; /* Clean off-white clinical background */
-  --bg-surface:          #FFFFFF; /* Crisp White */
-  --bg-surface-subtle:   #F1F5F9; /* Slate 100 */
-  --border-color:        #E2E8F0; /* Slate 200 */
-  --border-subtle:       #F1F5F9;
+  --bg-app:              #F6F9FF; /* Calm Ice-Blue Clinical Canvas */
+  --bg-surface:          #FFFFFF; /* Crisp White Cards & Panels */
+  --bg-surface-subtle:   #EFF6FF; /* Light Blue Tint */
+  --border-color:        #DCE6F7; /* Cool Neutral Hairline */
+  --border-subtle:       #EBF1FA;
 
-  --text-primary:        #0F172A; /* Deep Navy - crystal clear */
+  --text-primary:        #0F172A; /* Deep Navy */
   --text-secondary:      #334155; /* Slate 700 */
   --text-muted:          #64748B; /* Slate 500 */
 
-  --header-bg:           #0F172A; /* Deep Navy Top Bar */
-  --header-text:         #FFFFFF;
-  --header-subtext:      #94A3B8;
+  --header-bg:           #FFFFFF; /* Clean White Header */
+  --header-text:         #0F172A; /* Deep Navy Header Text */
+  --header-border:       #DCE6F7;
+  --header-subtext:      #64748B;
+
+  --footer-bg:           #EFF6FF; /* Refined Light-Blue Tint Footer */
 
   --sidebar-bg:          #FFFFFF;
-  --sidebar-border:      #E2E8F0;
+  --sidebar-border:      #DCE6F7;
 
-  --risk-low:            #16A34A; /* Low Risk Green */
+  --risk-low:            #15803D; /* Low Risk Green */
   --risk-low-bg:         #F0FDF4;
   --risk-low-border:     #BBF7D0;
 
-  --risk-high:           #DC2626; /* High Risk Red */
+  --risk-moderate:       #B45309; /* Moderate Risk Amber */
+  --risk-moderate-bg:    #FFFBEB;
+  --risk-moderate-border:#FDE68A;
+
+  --risk-high:           #B91C1C; /* High Risk Red */
   --risk-high-bg:        #FEF2F2;
   --risk-high-border:    #FECACA;
 }
 
 [data-theme="dark"] {
-  /* ── DARK CLINICAL PALETTE: High Contrast & Legible ── */
-  --color-primary-accent: #14B8A6; /* Vibrant Clinical Teal */
-  --color-primary-hover:  #2DD4BF;
-  --color-primary-subtle: rgba(20, 184, 166, 0.12);
-  --color-primary-border: rgba(20, 184, 166, 0.3);
+  /* ── DARK CLINICAL PALETTE (Deep Navy & Bright Blue) ── */
+  --color-primary-accent: #3B82F6; /* Bright Clinical Blue */
+  --color-primary-hover:  #60A5FA; /* Lighter Blue Hover */
+  --color-primary-subtle: rgba(59, 130, 246, 0.14);
+  --color-primary-border: rgba(59, 130, 246, 0.35);
 
-  --bg-app:              #0B1120; /* Deep Clinical Slate/Navy */
-  --bg-surface:          #111827; /* Slate 900 Surface */
-  --bg-surface-subtle:   #1E293B; /* Slate 800 */
-  --border-color:        #334155; /* Slate 700 */
-  --border-subtle:       #1E293B;
+  --bg-app:              #0B1220; /* Deep Navy Canvas */
+  --bg-surface:          #111A2E; /* Slate-Navy Surface */
+  --bg-surface-subtle:   #18243D; /* Elevated Slate-Navy */
+  --border-color:        #24334F; /* Cool Navy Border */
+  --border-subtle:       #18243D;
 
-  --text-primary:        #F8FAFC; /* Slate 50 - 100% visible off-white */
-  --text-secondary:      #CBD5E1; /* Slate 300 - clear readable */
-  --text-muted:          #94A3B8; /* Slate 400 - high-contrast meta */
+  --text-primary:        #F8FAFC; /* Crisp Off-White */
+  --text-secondary:      #CBD5E1; /* Slate 300 */
+  --text-muted:          #94A3B8; /* Slate 400 */
 
-  --header-bg:           #080D1A; /* Deepest Navy Top Bar */
-  --header-text:         #FFFFFF;
+  --header-bg:           #0F172A; /* Deep Navy Header */
+  --header-text:         #F8FAFC;
+  --header-border:       #24334F;
   --header-subtext:      #94A3B8;
 
-  --sidebar-bg:          #111827;
-  --sidebar-border:      #334155;
+  --footer-bg:           #0D1629; /* Deep Navy Footer */
 
-  --risk-low:            #4ADE80; /* High Contrast Green */
-  --risk-low-bg:         rgba(34, 197, 94, 0.15);
+  --sidebar-bg:          #111A2E;
+  --sidebar-border:      #24334F;
+
+  --risk-low:            #4ADE80;
+  --risk-low-bg:         rgba(34, 197, 94, 0.14);
   --risk-low-border:     rgba(34, 197, 94, 0.35);
 
-  --risk-high:           #F87171; /* High Contrast Red */
-  --risk-high-bg:        rgba(239, 68, 68, 0.18);
-  --risk-high-border:    rgba(239, 68, 68, 0.4);
+  --risk-moderate:       #FBBF24;
+  --risk-moderate-bg:    rgba(245, 158, 11, 0.14);
+  --risk-moderate-border:rgba(245, 158, 11, 0.35);
+
+  --risk-high:           #F87171;
+  --risk-high-bg:        rgba(239, 68, 68, 0.16);
+  --risk-high-border:    rgba(239, 68, 68, 0.38);
 }
 
 html {
@@ -83,33 +97,68 @@ body {
   min-height: 100vh;
   background-color: var(--bg-app);
   color: var(--text-primary);
-  font-family: "Inter", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.2s ease, color 0.2s ease;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
 
-/* ─────────────── Full-Height App Shell ─────────────── */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─────────────── Full-Height App Shell & Backgrounds ─────────────── */
 .edcif-app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-app);
+  background-image: radial-gradient(circle at 50% 0%, rgba(29, 78, 216, 0.04) 0%, transparent 60%);
+}
+
+[data-theme="dark"] .edcif-app-container {
+  background-image: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+}
+
+.landing-hero-surface {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #FFFFFF 0%, #EFF6FF 55%, #E0ECFF 100%);
+}
+
+[data-theme="dark"] .landing-hero-surface {
+  background: linear-gradient(180deg, #0B1220 0%, #0F1A30 55%, #111F3A 100%);
 }
 
 /* ─────────────── Quiet Top Navigation Bar ─────────────── */
 .edcif-header {
   background-color: var(--header-bg);
   color: var(--header-text);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--header-border);
   padding: 12px 24px;
   padding-top: max(12px, env(safe-area-inset-top));
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .header-inner {
@@ -124,66 +173,76 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .brand-crest {
-  background: var(--color-primary-accent);
-  color: #FFFFFF;
-  font-weight: 700;
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary-accent);
+  border: 1px solid var(--color-primary-border);
+  font-weight: 600;
   font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  padding: 6px 10px;
-  border-radius: 6px;
-  display: flex;
+  padding: 8px 14px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.3;
+}
+
+.header-signout-btn {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--risk-high);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.header-title-text {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  letter-spacing: -0.01em;
-  margin: 0;
-}
-
-.header-subtitle-text {
-  font-size: 0.76rem;
-  color: var(--header-subtext);
-  margin: 2px 0 0 0;
+.header-signout-btn:hover {
+  background-color: var(--risk-high-bg);
+  border-color: var(--risk-high-border);
 }
 
 /* Theme Toggle Button (Top Right Corner) */
 .theme-toggle-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #FFFFFF;
-  border-radius: 6px;
-  padding: 6px 12px;
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 8px 10px;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  transition: background 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .theme-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background-color: var(--color-primary-subtle);
+  border-color: var(--color-primary-border);
+  color: var(--color-primary-accent);
 }
 
 /* ─────────────── Clinical Shell Layout ─────────────── */
-/* Guest Landing Layout */
 .main-content-workspace {
   flex: 1;
-  max-width: 1440px;
   width: 100%;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Logged-In Full Shell Layout: Sidepanel extends flush down to the footer! */
 .main-content-full {
   flex: 1;
   width: 100%;
@@ -195,46 +254,51 @@ body {
   display: flex;
   flex: 1;
   width: 100%;
-  min-height: calc(100vh - 58px - 48px); /* Full viewport height minus header and footer */
+  min-height: calc(100vh - 60px - 56px);
   align-items: stretch;
 }
 
-/* ─────────────── Full-Height Flush Sidepanel ─────────────── */
+/* ─────────────── Full-Height Flush Fixed/Sticky Sidepanel ─────────────── */
 .clinical-sidebar {
-  width: 260px;
+  width: 264px;
   flex-shrink: 0;
   background-color: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 20px 14px;
-  align-self: stretch; /* Extends straight down to footer! */
+  padding: 20px 12px;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  align-self: flex-start;
+  z-index: 40;
 }
 
 .sidebar-brand-block {
-  padding: 8px 10px 16px 10px;
+  padding: 8px 12px 16px 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar-brand-tag {
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-primary-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
 }
 
 .sidebar-brand-name {
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .sidebar-brand-dept {
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
   margin-top: 2px;
 }
@@ -243,15 +307,16 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 0.88rem;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-secondary);
   background: transparent;
   border: none;
+  border-left: 2px solid transparent;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   text-align: left;
   width: 100%;
 }
@@ -262,8 +327,9 @@ body {
 }
 
 .sidebar-nav-item--active {
-  background-color: var(--color-primary-accent) !important;
-  color: #FFFFFF !important;
+  background-color: var(--color-primary-subtle) !important;
+  color: var(--color-primary-accent) !important;
+  border-left: 2px solid var(--color-primary-accent) !important;
   font-weight: 600;
 }
 
@@ -275,17 +341,22 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: var(--bg-app);
+  background-color: transparent;
 }
 
-/* ─────────────── Standard Clinical Panel (No Fragmented Floating Cards) ─────────────── */
+/* ─────────────── Standard Clinical Panel ─────────────── */
 .clinical-panel {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px;
   color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+[data-theme="dark"] .clinical-panel {
+  box-shadow: none;
 }
 
 .clinical-panel-header {
@@ -300,8 +371,8 @@ body {
 }
 
 .panel-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: var(--text-primary);
   margin: 0;
 }
@@ -312,38 +383,41 @@ body {
   margin: 4px 0 0 0;
 }
 
-/* ─────────────── Tables (Clinical Standard & Legible in Dark Mode) ─────────────── */
+/* ─────────────── Tables ─────────────── */
 .clinical-table-container {
   overflow-x: auto;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: var(--bg-surface);
 }
 
 .clinical-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   text-align: left;
+  font-variant-numeric: tabular-nums;
 }
 
 .clinical-table th {
   background-color: var(--bg-surface-subtle);
   color: var(--text-primary);
   font-weight: 600;
-  font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 12px 14px;
+  font-size: 0.78rem;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-color);
   white-space: nowrap;
 }
 
 .clinical-table td {
-  padding: 12px 14px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-secondary);
   vertical-align: middle;
+}
+
+.clinical-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .clickable-row {
@@ -360,11 +434,10 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 0.74rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
@@ -372,6 +445,12 @@ body {
   background-color: var(--risk-low-bg);
   color: var(--risk-low);
   border: 1px solid var(--risk-low-border);
+}
+
+.badge-clinical--moderate {
+  background-color: var(--risk-moderate-bg);
+  color: var(--risk-moderate);
+  border: 1px solid var(--risk-moderate-border);
 }
 
 .badge-clinical--high {
@@ -382,26 +461,26 @@ body {
 
 .badge-clinical--neutral {
   background-color: var(--bg-surface-subtle);
-  color: var(--text-muted);
-  border: 1px solid var(--border-color);
+  color: var(--color-primary-accent);
+  border: 1px solid var(--color-primary-border);
 }
 
 /* ─────────────── Form Inputs ─────────────── */
 .clinical-input {
   width: 100%;
-  padding: 9px 12px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
   border: 1px solid var(--border-color);
   background-color: var(--bg-surface);
   color: var(--text-primary);
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .clinical-input:focus {
   border-color: var(--color-primary-accent);
-  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+  box-shadow: 0 0 0 3px var(--color-primary-subtle);
 }
 
 .clinical-input::placeholder {
@@ -409,40 +488,73 @@ body {
 }
 
 /* ─────────────── Buttons ─────────────── */
-.btn-primary-teal {
+.btn-primary-teal,
+.btn-primary-blue {
   background-color: var(--color-primary-accent);
   color: #FFFFFF;
-  border: none;
-  border-radius: 6px;
-  padding: 9px 18px;
-  font-size: 0.88rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
-.btn-primary-teal:hover {
+.btn-primary-teal:hover,
+.btn-primary-blue:hover {
   background-color: var(--color-primary-hover);
+}
+
+.btn-primary-teal:disabled,
+.btn-primary-blue:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .btn-secondary {
   background-color: var(--bg-surface);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 8px 14px;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .btn-secondary:hover {
   background-color: var(--bg-surface-subtle);
+  border-color: var(--color-primary-border);
+}
+
+.btn-danger-outline {
+  background-color: var(--risk-high-bg);
+  color: var(--risk-high);
+  border: 1px solid var(--risk-high-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-danger-outline:hover {
+  border-color: var(--risk-high);
 }
 
 /* ─────────────── Tabular Figures ─────────────── */
@@ -488,10 +600,10 @@ body {
     gap: 20px;
   }
   .landing-left-col {
-    order: 2; /* Clinical overview moves below the login form on mobile */
+    order: 2;
   }
   .landing-right-col {
-    order: 1; /* Auth card moves to top on mobile */
+    order: 1;
     width: 100%;
   }
 
@@ -503,10 +615,6 @@ body {
   .responsive-three-col {
     grid-template-columns: 1fr !important;
     gap: 12px !important;
-  }
-
-  .main-content-workspace {
-    padding: 16px 12px;
   }
 
   .clinical-shell-container {
@@ -526,9 +634,15 @@ body {
     gap: 8px;
     align-items: center;
     background-color: var(--bg-surface);
+    position: sticky;
+    top: 60px;
+    height: auto;
+    max-height: none;
+    z-index: 40;
   }
 
-  .sidebar-brand-block {
+  .sidebar-brand-block,
+  .sidebar-user-footer {
     display: none;
   }
 
@@ -536,7 +650,9 @@ body {
     width: auto;
     flex-shrink: 0;
     padding: 8px 14px;
-    border-radius: 20px;
+    border-radius: 8px;
+    border-left: none;
+    border-bottom: 2px solid transparent;
     font-size: 0.82rem;
     min-height: 44px;
     display: inline-flex;
@@ -546,6 +662,7 @@ body {
   }
 
   .sidebar-nav-item--active {
+    border-left: 1px solid var(--color-primary-accent) !important;
     border-color: var(--color-primary-accent) !important;
   }
 
@@ -555,7 +672,7 @@ body {
   }
 
   .clinical-panel {
-    padding: 16px 14px;
+    padding: 16px;
   }
 
   .clinical-panel-header {
@@ -570,7 +687,7 @@ body {
   }
 }
 
-/* ─────────────── Small Phone Breakpoints (<600px, 320px-430px) ─────────────── */
+/* ─────────────── Small Phone Breakpoints (<600px) ─────────────── */
 @media (max-width: 600px) {
   .edcif-header {
     padding: 10px 12px;
@@ -587,55 +704,203 @@ body {
     justify-content: space-between;
   }
 
-  .header-subtitle-text {
-    display: none;
-  }
-
-  .header-title-text {
-    font-size: 1rem;
-  }
-
   .brand-crest {
-    font-size: 0.72rem;
-    padding: 4px 8px;
-  }
-
-  .theme-toggle-btn {
-    padding: 6px 10px;
     font-size: 0.76rem;
+    padding: 6px 10px;
   }
 
   .clinical-input {
-    font-size: 16px; /* Prevents auto-zoom on mobile WebViews */
+    font-size: 16px;
     min-height: 44px;
   }
 
   .btn-primary-teal,
+  .btn-primary-blue,
   .btn-secondary {
     min-height: 44px;
   }
 
-  .edcif-footer {
-    padding: 12px 14px;
+  .edcif-footer--app {
+    padding: 14px 16px;
     flex-direction: column;
     text-align: center;
     gap: 8px;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
 }
 
-/* ─────────────── Footer ─────────────── */
-.edcif-footer {
-  background-color: var(--bg-surface);
+/* ─────────────── Fixed Left Sidepanel Bottom User Profile ─────────────── */
+.sidebar-user-footer {
+  margin-top: auto;
+  padding-top: 14px;
   border-top: 1px solid var(--border-color);
-  padding: 14px 24px;
-  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  background-color: var(--sidebar-bg);
+}
+
+.sidebar-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-primary-accent);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.sidebar-user-email {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+  font-size: 0.72rem;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* ─────────────── Logged-In Pages Footer ─────────────── */
+.edcif-footer--app {
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 16px 28px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 16px;
+  margin-top: auto;
+  width: 100%;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-copyright-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.footer-links-row {
+  display: flex;
+  align-items: center;
   gap: 12px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.footer-links-row span[data-link] {
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.footer-links-row span[data-link]:hover {
+  color: var(--color-primary-accent);
+}
+
+.footer-dot {
+  color: var(--border-color);
+  font-size: 0.85rem;
+}
+
+/* ─────────────── Landing Page Rich Multi-Column Footer ─────────────── */
+.edcif-footer-landing {
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 48px 48px 24px 48px;
+  margin-top: auto;
+  color: var(--text-primary);
+  width: 100%;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.landing-footer-grid {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1.1fr 1.1fr 1.1fr;
+  gap: 48px;
+}
+
+@media (max-width: 900px) {
+  .landing-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .edcif-footer-landing {
+    padding: 32px 20px 20px 20px;
+  }
+}
+
+.landing-footer-col-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.landing-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.landing-footer-links li span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.landing-footer-links li span:hover {
+  color: var(--color-primary-accent);
+}
+
+.landing-footer-bottom {
+  max-width: 1300px;
+  margin: 36px auto 0 auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 @theme inline {
