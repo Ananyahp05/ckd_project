@@ -597,21 +597,10 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                   <button
                     type="button"
                     onClick={() => onViewEHR(patientId || "")}
-                    style={{
-                      background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "10px",
-                      padding: "10px 18px",
-                      fontSize: "0.82rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                    }}
+                    className="btn-primary-blue"
+                    style={{ padding: "10px 18px", fontSize: "0.82rem" }}
                   >
-                    🩺 Open in Unified Patient EHR Chart →
+                    Open in Unified Patient EHR Chart &rarr;
                   </button>
                 </div>
               )}
@@ -799,9 +788,9 @@ export default function LongitudinalFollowupForm({ token, initialPatientId, onVi
                         {result.explanation.temporal_weights_percent.map((wt: number, idx: number) => (
                           <div key={idx} style={{ background: "rgba(30, 41, 59, 0.6)", borderRadius: "8px", padding: "8px", textAlign: "center" }}>
                             <div style={{ fontSize: "0.7rem", color: "#94a3b8" }}>Visit {idx + 1}</div>
-                            <div style={{ fontSize: "1rem", fontWeight: 800, color: "#a5b4fc", margin: "2px 0" }}>{wt}%</div>
-                            <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.2)", borderRadius: "2px", overflow: "hidden" }}>
-                              <div style={{ width: `${wt}%`, height: "100%", background: "#6366f1" }} />
+                            <div className="tabular-figure" style={{ fontSize: "1rem", fontWeight: 600, color: "var(--color-primary-accent)", margin: "2px 0" }}>{wt}%</div>
+                            <div style={{ height: "4px", background: "var(--border-color)", borderRadius: "2px", overflow: "hidden" }}>
+                              <div style={{ width: `${wt}%`, height: "100%", background: "var(--color-primary-accent)" }} />
                             </div>
                           </div>
                         ))}

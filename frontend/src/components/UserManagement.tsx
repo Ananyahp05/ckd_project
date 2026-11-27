@@ -315,31 +315,31 @@ export default function UserManagement({ token }: UserManagementProps) {
           border-color: rgba(34, 197, 94, 0.3);
         }
         .assign-input {
-          background: rgba(15, 23, 42, 0.85);
-          border: 1px solid rgba(148, 163, 184, 0.2);
-          border-radius: 10px;
+          background: var(--bg-surface);
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
           padding: 9px 12px;
-          color: #f8fafc;
+          color: var(--text-primary);
           font-size: 0.85rem;
           outline: none;
         }
         .assign-input:focus {
-          border-color: #6366f1;
+          border-color: var(--color-primary-accent);
+          box-shadow: 0 0 0 3px var(--color-primary-subtle);
         }
         .btn-assign-action {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          background: var(--color-primary-accent);
           color: #fff;
           border: none;
-          border-radius: 10px;
+          border-radius: 8px;
           padding: 9px 18px;
-          font-weight: 700;
+          font-weight: 600;
           font-size: 0.85rem;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: background-color 0.15s ease;
         }
         .btn-assign-action:hover:not(:disabled) {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+          background: var(--color-primary-hover);
         }
         .btn-assign-action:disabled {
           opacity: 0.6;

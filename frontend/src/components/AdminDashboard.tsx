@@ -3,12 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "@/lib/api";
 import FederatedDashboard from "./FederatedDashboard";
+import { StethoscopeIcon, UsersIcon, ChartBarIcon, FlaskIcon, NetworkIcon, FolderIcon, TrashIcon } from "./Icons";
 
 type Props = {
   token: string;
+  adminProfile?: {
+    username: string;
+    email?: string;
+    full_name?: string;
+    role?: string;
+    id?: number;
+  };
 };
 
-export default function AdminDashboard({ token }: Props) {
+export default function AdminDashboard({ token, adminProfile }: Props) {
   const [activeSideNav, setActiveSideNav] = useState<"overview" | "doctors" | "patients" | "techs" | "invite" | "audit" | "federated">("doctors");
   const [stats, setStats] = useState<any>(null);
   const [doctors, setDoctors] = useState<any[]>([]);
@@ -138,6 +146,37 @@ export default function AdminDashboard({ token }: Props) {
     }
   };
 
+  // Delete Patient Record
+  const handleDeletePatient = async (patientId: string) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to permanently delete patient ${patientId}? This will remove all their records, predictions, and test history.`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/patients/${encodeURIComponent(patientId)}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        alert(`Patient ${patientId} successfully deleted.`);
+        if (selectedPatientId === patientId) {
+          setSelectedPatientId(null);
+          setPatientDetails(null);
+        }
+        loadData();
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.detail || "Failed to delete patient record.");
+      }
+    } catch (e: any) {
+      alert(`Network error while deleting patient: ${e.message}`);
+    }
+  };
+
   // Toggle Doctor Active / Deactivated Status
   const handleToggleDoctorStatus = async (userId: number, currentActive: boolean) => {
     try {
@@ -215,7 +254,7 @@ export default function AdminDashboard({ token }: Props) {
           onClick={() => { setActiveSideNav("doctors"); setSelectedDoctorId(null); }}
           className={`sidebar-nav-item ${activeSideNav === "doctors" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>👨‍⚕️</span>
+          <StethoscopeIcon size={16} />
           <span>Doctors ({doctors.length})</span>
         </button>
 
@@ -223,7 +262,7 @@ export default function AdminDashboard({ token }: Props) {
           onClick={() => { setActiveSideNav("patients"); setSelectedPatientId(null); }}
           className={`sidebar-nav-item ${activeSideNav === "patients" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>👥</span>
+          <UsersIcon size={16} />
           <span>Patients ({patients.length})</span>
         </button>
 
@@ -231,7 +270,7 @@ export default function AdminDashboard({ token }: Props) {
           onClick={() => setActiveSideNav("overview")}
           className={`sidebar-nav-item ${activeSideNav === "overview" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>📊</span>
+          <ChartBarIcon size={16} />
           <span>Hospital Overview</span>
         </button>
 
@@ -239,7 +278,7 @@ export default function AdminDashboard({ token }: Props) {
           onClick={() => setActiveSideNav("techs")}
           className={`sidebar-nav-item ${activeSideNav === "techs" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>🧪</span>
+          <FlaskIcon size={16} />
           <span>Lab Technicians ({techs.length})</span>
         </button>
 
@@ -247,7 +286,7 @@ export default function AdminDashboard({ token }: Props) {
           onClick={() => setActiveSideNav("invite")}
           className={`sidebar-nav-item ${activeSideNav === "invite" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>➕</span>
+          <UsersIcon size={16} />
           <span>Invite Staff</span>
         </button>
 
@@ -255,7 +294,7 @@ export default function AdminDashboard({ token }: Props) {
           onClick={() => setActiveSideNav("federated")}
           className={`sidebar-nav-item ${activeSideNav === "federated" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>⚙</span>
+          <NetworkIcon size={16} />
           <span>Federated Learning</span>
         </button>
 
@@ -263,9 +302,24 @@ export default function AdminDashboard({ token }: Props) {
           onClick={() => setActiveSideNav("audit")}
           className={`sidebar-nav-item ${activeSideNav === "audit" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>📁</span>
+          <FolderIcon size={16} />
           <span>Activity & Audit Logs</span>
         </button>
+
+        {/* Fixed Logged-In User Profile at the Bottom of Left Sidepanel (Image 1) */}
+        <div className="sidebar-user-footer">
+          <div className="sidebar-user-avatar">
+            {(adminProfile?.full_name || adminProfile?.username || "AD").slice(0, 2).toUpperCase()}
+          </div>
+          <div className="sidebar-user-info">
+            <div className="sidebar-user-email" title={adminProfile?.email || adminProfile?.username || "admin@hospital.org"}>
+              {adminProfile?.email || adminProfile?.username || "admin@hospital.org"}
+            </div>
+            <div className="sidebar-user-role">
+              Hospital Administrator
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* ── 2. FLUID CLINICAL CONTENT AREA ── */}
@@ -486,16 +540,31 @@ export default function AdminDashboard({ token }: Props) {
                         <span className="badge-clinical badge-clinical--low">{p.status}</span>
                       </td>
                       <td>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectPatientRow(p.patient_id);
-                          }}
-                          className="btn-secondary"
-                          style={{ fontSize: "0.78rem", padding: "5px 12px" }}
-                        >
-                          View Details &rarr;
-                        </button>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSelectPatientRow(p.patient_id);
+                            }}
+                            className="btn-secondary"
+                            style={{ fontSize: "0.78rem", padding: "5px 12px" }}
+                          >
+                            View Details &rarr;
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeletePatient(p.patient_id);
+                            }}
+                            className="btn-danger-outline"
+                            style={{ fontSize: "0.78rem", padding: "5px 10px" }}
+                            title="Delete Patient Record"
+                          >
+                            <TrashIcon size={14} />
+                            <span>Delete</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -527,26 +596,39 @@ export default function AdminDashboard({ token }: Props) {
                   </div>
                 </div>
 
-                {/* Doctor Reassignment Dropdown */}
-                <form onSubmit={handleReassignDoctor} style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                  <select
-                    value={reassignDocId}
-                    onChange={(e) => setReassignDocId(e.target.value)}
-                    className="clinical-input"
-                    style={{ width: "200px" }}
-                  >
-                    <option value="">-- Assign Doctor --</option>
-                    {doctors.map((d) => (
-                      <option key={d.id} value={d.id}>{d.full_name}</option>
-                    ))}
-                  </select>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
+                  {/* Doctor Reassignment Dropdown */}
+                  <form onSubmit={handleReassignDoctor} style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <select
+                      value={reassignDocId}
+                      onChange={(e) => setReassignDocId(e.target.value)}
+                      className="clinical-input"
+                      style={{ width: "200px" }}
+                    >
+                      <option value="">-- Assign Doctor --</option>
+                      {doctors.map((d) => (
+                        <option key={d.id} value={d.id}>{d.full_name}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="submit"
+                      className="btn-primary-teal"
+                    >
+                      Assign Physician
+                    </button>
+                  </form>
+
                   <button
-                    type="submit"
-                    className="btn-primary-teal"
+                    type="button"
+                    onClick={() => handleDeletePatient(selectedPatientId)}
+                    className="btn-danger-outline"
+                    style={{ fontSize: "0.82rem", padding: "8px 14px" }}
+                    title="Permanently Delete This Patient"
                   >
-                    Assign Physician
+                    <TrashIcon size={15} />
+                    <span>Delete Patient</span>
                   </button>
-                </form>
+                </div>
               </div>
             </div>
 

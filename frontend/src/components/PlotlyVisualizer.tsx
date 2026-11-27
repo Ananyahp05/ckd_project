@@ -223,13 +223,13 @@ export default function PlotlyVisualizer({ patientId, token }: PlotlyVisualizerP
 
       {/* Main Chart Canvas */}
       {loading ? (
-        <div style={{ height: "380px", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", gap: "10px" }}>
-          <div style={{ width: "20px", height: "20px", border: "2px solid #38bdf8", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+        <div style={{ height: "380px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", gap: "10px" }}>
+          <div style={{ width: "20px", height: "20px", border: "2px solid var(--color-primary-accent)", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
           <span>Generating interactive Plotly vector schemas...</span>
         </div>
       ) : error ? (
-        <div style={{ height: "380px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#f87171" }}>
-          <span>⚠ {error}</span>
+        <div style={{ height: "380px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "var(--risk-high)" }}>
+          <span>{error}</span>
         </div>
       ) : (
         <div

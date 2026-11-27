@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { ShieldIcon, UserIcon, LockIcon, AlertTriangleIcon, StethoscopeIcon, ActivityIcon } from "./Icons";
 import { API_BASE_URL } from "@/lib/api";
 
 type AuthModalProps = {
@@ -108,17 +109,16 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
           padding: 16px;
         }
         .auth-card {
-          background: #0b1329;
-          background: linear-gradient(145deg, rgba(15, 23, 42, 0.98) 0%, rgba(10, 15, 30, 0.96) 100%);
-          border: 1px solid rgba(148, 163, 184, 0.16);
-          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 50px rgba(99, 102, 241, 0.12);
-          border-radius: 24px;
+          background: var(--bg-surface);
+          border: 1px solid var(--border-color);
+          box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+          border-radius: 16px;
           max-width: 440px;
           width: 100%;
           padding: 32px 28px;
           position: relative;
-          color: #f1f5f9;
-          animation: authCardIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+          color: var(--text-primary);
+          animation: authCardIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
         @keyframes authCardIn {
           from {
@@ -154,9 +154,9 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
         }
         .auth-tab-group {
           display: flex;
-          background: rgba(15, 23, 42, 0.8);
-          border: 1px solid rgba(148, 163, 184, 0.12);
-          border-radius: 14px;
+          background: var(--bg-surface-subtle);
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
           padding: 4px;
           margin-bottom: 24px;
           gap: 4px;
@@ -164,19 +164,18 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
         .auth-tab-btn {
           flex: 1;
           padding: 10px 14px;
-          border-radius: 10px;
+          border-radius: 8px;
           border: none;
           background: transparent;
-          color: #94a3b8;
+          color: var(--text-muted);
           font-size: 0.84rem;
-          font-weight: 700;
+          font-weight: 600;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: background-color 0.15s ease, color 0.15s ease;
         }
         .auth-tab-btn--active {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          background: var(--color-primary-accent);
           color: #ffffff;
-          box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
         }
         .auth-field {
           display: flex;
@@ -186,11 +185,9 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
           text-align: left;
         }
         .auth-label {
-          font-size: 0.74rem;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: #94a3b8;
+          font-size: 0.78rem;
+          font-weight: 600;
+          color: var(--text-secondary);
           display: flex;
           align-items: center;
           gap: 6px;
@@ -203,90 +200,89 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
         .auth-input-icon {
           position: absolute;
           left: 14px;
-          color: #64748b;
-          font-size: 0.95rem;
+          color: var(--text-muted);
+          display: inline-flex;
+          align-items: center;
           pointer-events: none;
         }
         .auth-input {
           width: 100%;
-          background: rgba(30, 41, 59, 0.7);
-          border: 1px solid rgba(148, 163, 184, 0.18);
-          border-radius: 12px;
-          padding: 12px 14px 12px 42px;
-          color: #f8fafc;
-          font-size: 0.92rem;
+          background: var(--bg-surface);
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
+          padding: 11px 14px 11px 42px;
+          color: var(--text-primary);
+          font-size: 0.9rem;
           font-weight: 500;
           outline: none;
-          transition: all 0.2s ease;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
         .auth-input::placeholder {
-          color: #64748b;
+          color: var(--text-muted);
         }
         .auth-input:focus {
-          background: rgba(30, 41, 59, 0.95);
-          border-color: #6366f1;
-          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+          border-color: var(--color-primary-accent);
+          box-shadow: 0 0 0 3px var(--color-primary-subtle);
         }
         .auth-password-toggle {
           position: absolute;
           right: 12px;
           background: transparent;
           border: none;
-          color: #94a3b8;
+          color: var(--text-muted);
           cursor: pointer;
-          font-size: 1rem;
           padding: 4px;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: color 0.2s;
+          transition: color 0.15s ease;
         }
         .auth-password-toggle:hover {
-          color: #f1f5f9;
+          color: var(--text-primary);
         }
         .auth-select {
           width: 100%;
-          background: rgba(30, 41, 59, 0.85);
-          border: 1px solid rgba(148, 163, 184, 0.2);
-          border-radius: 12px;
-          padding: 12px 14px 12px 42px;
-          color: #f8fafc;
+          background: var(--bg-surface);
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
+          padding: 11px 14px 11px 42px;
+          color: var(--text-primary);
           font-size: 0.9rem;
           font-weight: 600;
           outline: none;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
           appearance: auto;
           -webkit-appearance: menulist;
         }
         .auth-select:focus {
-          border-color: #8b5cf6;
-          box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+          border-color: var(--color-primary-accent);
+          box-shadow: 0 0 0 3px var(--color-primary-subtle);
         }
         .auth-select option {
-          background: #0f172a;
-          color: #f8fafc;
+          background: var(--bg-surface);
+          color: var(--text-primary);
           padding: 10px;
         }
         .role-hint-box {
           margin-top: 8px;
           padding: 10px 12px;
-          background: rgba(30, 41, 59, 0.5);
-          border: 1px solid rgba(148, 163, 184, 0.12);
-          border-radius: 10px;
+          background: var(--bg-surface-subtle);
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
           font-size: 0.74rem;
-          color: #cbd5e1;
+          color: var(--text-secondary);
           line-height: 1.45;
           display: flex;
           gap: 8px;
           align-items: flex-start;
         }
         .auth-error {
-          background: rgba(239, 68, 68, 0.12);
-          border: 1px solid rgba(239, 68, 68, 0.3);
-          border-radius: 12px;
+          background: var(--risk-high-bg);
+          border: 1px solid var(--risk-high-border);
+          border-radius: 8px;
           padding: 12px 14px;
-          color: #fca5a5;
+          color: var(--risk-high);
           font-size: 0.82rem;
           margin-bottom: 18px;
           display: flex;
@@ -295,26 +291,23 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
         }
         .auth-submit-btn {
           width: 100%;
-          padding: 14px 20px;
-          border-radius: 14px;
+          padding: 12px 20px;
+          border-radius: 8px;
           border: none;
-          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+          background: var(--color-primary-accent);
           color: #ffffff;
-          font-size: 0.95rem;
-          font-weight: 700;
-          letter-spacing: 0.02em;
+          font-size: 0.92rem;
+          font-weight: 600;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
-          transition: all 0.2s ease;
+          transition: background-color 0.15s ease;
           margin-top: 6px;
         }
         .auth-submit-btn:hover:not(:disabled) {
-          transform: translateY(-1px);
-          box-shadow: 0 8px 26px rgba(99, 102, 241, 0.45);
+          background: var(--color-primary-hover);
         }
         .auth-submit-btn:disabled {
           opacity: 0.6;
@@ -357,22 +350,22 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
               style={{
                 width: "42px",
                 height: "42px",
-                borderRadius: "12px",
-                background: "rgba(99, 102, 241, 0.15)",
-                border: "1px solid rgba(99, 102, 241, 0.35)",
+                borderRadius: "10px",
+                background: "var(--color-primary-subtle)",
+                border: "1px solid var(--color-primary-border)",
+                color: "var(--color-primary-accent)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "1.3rem",
               }}
             >
-              🛡️
+              <ShieldIcon size={20} />
             </div>
             <div>
-              <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+              <h2 style={{ fontSize: "1.2rem", fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>
                 {isLogin ? "Clinical Portal Login" : "Create Clinical Account"}
               </h2>
-              <p style={{ fontSize: "0.76rem", color: "#64748b", margin: "2px 0 0 0" }}>
+              <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", margin: "2px 0 0 0" }}>
                 EDCIF Health Intelligence & ML Platform
               </p>
             </div>
@@ -405,7 +398,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
           {/* Error Message Alert */}
           {errorMsg && (
             <div className="auth-error">
-              <span>⚠</span>
+              <AlertTriangleIcon size={16} />
               <span>{errorMsg}</span>
             </div>
           )}
@@ -418,7 +411,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                 <span>Username / Medical ID</span>
               </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon">👤</span>
+                <span className="auth-input-icon"><UserIcon size={16} /></span>
                 <input
                   id="auth-username"
                   type="text"
@@ -447,7 +440,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                 <span>Password</span>
               </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon">🔒</span>
+                <span className="auth-input-icon"><LockIcon size={16} /></span>
                 <input
                   id="auth-password"
                   type={showPassword ? "text" : "password"}
@@ -463,8 +456,19 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                   className="auth-password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
+                  title={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? "🙈" : "👁️"}
+                  {showPassword ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
                 </button>
               </div>
             </div>
@@ -476,7 +480,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                   <span>Assigned Healthcare Role</span>
                 </label>
                 <div className="auth-input-wrapper">
-                  <span className="auth-input-icon">⚕️</span>
+                  <span className="auth-input-icon"><StethoscopeIcon size={16} /></span>
                   <select
                     id="auth-role"
                     value={role}
@@ -491,8 +495,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
 
                 {/* Role Description Card */}
                 <div className="role-hint-box">
-                  <span style={{ fontSize: "1rem" }}>
-                    {role === "Doctor" ? "🩺" : role === "Patient" ? "🧬" : "🛡️"}
+                  <span style={{ color: "var(--color-primary-accent)", display: "inline-flex", marginTop: "2px" }}>
+                    {role === "Doctor" ? <StethoscopeIcon size={16} /> : role === "Patient" ? <ActivityIcon size={16} /> : <ShieldIcon size={16} />}
                   </span>
                   <div>
                     {role === "Doctor" && (
@@ -524,7 +528,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                 </>
               ) : (
                 <>
-                  <span>{isLogin ? "🔐 Sign In to Portal" : "✨ Register Account"}</span>
+                  <LockIcon size={16} />
+                  <span>{isLogin ? "Sign In to Portal" : "Register Account"}</span>
                 </>
               )}
             </button>

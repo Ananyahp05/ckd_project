@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "@/lib/api";
 import PatientForm from "./PatientForm";
 import UnifiedPatientEHR from "./UnifiedPatientEHR";
+import { UsersIcon, ChartBarIcon, ClipboardIcon, TrendUpIcon, TrashIcon } from "./Icons";
 
 type Props = {
   token: string;
@@ -85,6 +86,37 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
     }
   };
 
+  // Delete Patient Record & Associated History
+  const handleDeletePatient = async (patientId: string) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to permanently delete patient ${patientId}? This will remove all their records, predictions, and test history.`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/doctor/patient/${encodeURIComponent(patientId)}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        alert(`Patient ${patientId} successfully deleted.`);
+        if (selectedPatientId === patientId) {
+          setSelectedPatientId(null);
+          setPatientDetails(null);
+        }
+        loadDoctorData();
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.detail || "Failed to delete patient record.");
+      }
+    } catch (e: any) {
+      alert(`Network error while deleting patient: ${e.message}`);
+    }
+  };
+
   // FHIR R4 JSON Export
   const handleExportFhir = async (pId: string) => {
     try {
@@ -163,7 +195,7 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
           onClick={() => { setActiveSideNav("patients"); setSelectedPatientId(null); }}
           className={`sidebar-nav-item ${activeSideNav === "patients" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>👥</span>
+          <UsersIcon size={16} />
           <span>My Patients ({patients.length})</span>
         </button>
 
@@ -171,7 +203,7 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
           onClick={() => setActiveSideNav("overview")}
           className={`sidebar-nav-item ${activeSideNav === "overview" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>📊</span>
+          <ChartBarIcon size={16} />
           <span>Overview Analytics</span>
         </button>
 
@@ -179,7 +211,7 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
           onClick={() => setActiveSideNav("assessment")}
           className={`sidebar-nav-item ${activeSideNav === "assessment" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>📋</span>
+          <ClipboardIcon size={16} />
           <span>New Clinical Intake</span>
         </button>
 
@@ -187,9 +219,24 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
           onClick={() => setActiveSideNav("ehr")}
           className={`sidebar-nav-item ${activeSideNav === "ehr" ? "sidebar-nav-item--active" : ""}`}
         >
-          <span style={{ fontSize: "1rem" }}>📈</span>
+          <TrendUpIcon size={16} />
           <span>Longitudinal eGFR Chart</span>
         </button>
+
+        {/* Fixed Logged-In User Profile at the Bottom of Left Sidepanel (Image 1) */}
+        <div className="sidebar-user-footer">
+          <div className="sidebar-user-avatar">
+            {(doctorProfile?.full_name || doctorProfile?.username || "DR").slice(0, 2).toUpperCase()}
+          </div>
+          <div className="sidebar-user-info">
+            <div className="sidebar-user-email" title={doctorProfile?.email || doctorProfile?.username || "attending@hospital.org"}>
+              {doctorProfile?.email || doctorProfile?.username || "attending@hospital.org"}
+            </div>
+            <div className="sidebar-user-role">
+              Attending Physician
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* ── 2. FLUID CLINICAL CONTENT AREA ── */}
@@ -276,16 +323,31 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
                             {formatRiskScore(p.latest_risk_score)}
                           </td>
                           <td>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSelectPatientRow(p.patient_id);
-                              }}
-                              className="btn-secondary"
-                              style={{ fontSize: "0.78rem", padding: "5px 12px" }}
-                            >
-                              View Details &rarr;
-                            </button>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSelectPatientRow(p.patient_id);
+                                }}
+                                className="btn-secondary"
+                                style={{ fontSize: "0.78rem", padding: "5px 12px" }}
+                              >
+                                View Details &rarr;
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeletePatient(p.patient_id);
+                                }}
+                                className="btn-danger-outline"
+                                style={{ fontSize: "0.78rem", padding: "5px 10px" }}
+                                title="Delete Patient Record"
+                              >
+                                <TrashIcon size={14} />
+                                <span>Delete</span>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -335,12 +397,22 @@ export default function DoctorDashboard({ token, doctorProfile }: Props) {
                 </div>
 
                 {/* Quick Actions */}
-                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
                   <button
                     onClick={() => handleExportFhir(selectedPatientId)}
                     className="btn-primary-teal"
                   >
                     Export FHIR R4 JSON
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeletePatient(selectedPatientId)}
+                    className="btn-danger-outline"
+                    style={{ fontSize: "0.82rem", padding: "8px 14px" }}
+                    title="Permanently Delete This Patient"
+                  >
+                    <TrashIcon size={15} />
+                    <span>Delete Patient</span>
                   </button>
                 </div>
               </div>

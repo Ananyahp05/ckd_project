@@ -1781,6 +1781,50 @@ def create_doctor_lab_request(
     return {"status": "success", "id": req.id, "message": "Laboratory test requested successfully."}
 
 
+@router.delete("/doctor/patient/{patient_id}", tags=["doctor", "admin"])
+@router.delete("/admin/patients/{patient_id}", tags=["doctor", "admin"])
+def delete_patient_record(
+    patient_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_roles("doctor", "admin"))
+):
+    """
+    Delete a patient record and cascade cleanup of all associated clinical records:
+    predictions, lab requests, lab tests, and doctor assignments.
+    """
+    pid_clean = patient_id.strip()
+
+    record = db.query(PatientRecord).filter(PatientRecord.patient_id == pid_clean).first()
+    preds = db.query(PredictionHistory).filter(PredictionHistory.patient_id == pid_clean).all()
+    labs = db.query(LabTest).filter(LabTest.patient_id == pid_clean).all()
+    reqs = db.query(LabRequest).filter(LabRequest.patient_id == pid_clean).all()
+    assigns = db.query(DoctorPatientAssignment).filter(DoctorPatientAssignment.patient_id == pid_clean).all()
+
+    if not record and not preds and not labs and not reqs and not assigns:
+        raise HTTPException(status_code=404, detail=f"Patient '{pid_clean}' not found.")
+
+    for p in preds:
+        db.delete(p)
+    for l in labs:
+        db.delete(l)
+    for r in reqs:
+        db.delete(r)
+    for a in assigns:
+        db.delete(a)
+    if record:
+        db.delete(record)
+
+    db.commit()
+
+    log_audit_event(
+        db, current_user, "PATIENT_RECORD_DELETED",
+        resource=f"patient:{pid_clean}",
+        details=f"Patient {pid_clean} permanently deleted by {current_user.username} ({current_user.role})."
+    )
+
+    return {"status": "success", "message": f"Patient '{pid_clean}' permanently deleted."}
+
+
 # ── 3. LAB TECHNICIAN DASHBOARD & RESULTS ENTRY (PHASE 7) ────────────────────
 
 @router.get("/lab/overview-stats", tags=["lab"])

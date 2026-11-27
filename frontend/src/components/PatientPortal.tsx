@@ -7,6 +7,7 @@ import {
   Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 import ClinicalReportModal, { ClinicalReportData } from "./ClinicalReportModal";
+import { ClipboardIcon, AlertTriangleIcon } from "./Icons";
 
 type PatientSummaryData = {
   patient_id: string;
@@ -205,10 +206,10 @@ export default function PatientPortal({ token, username }: PatientPortalProps) {
             <span className="spinner" /> Loading personal clinical records...
           </div>
         ) : errorMsg ? (
-          <div className="error-box">⚠ {errorMsg}</div>
+          <div className="error-box" style={{ display: "flex", alignItems: "center", gap: "8px" }}><AlertTriangleIcon size={16} /> {errorMsg}</div>
         ) : !latest ? (
           <div className="portal-card" style={{ textAlign: "center", padding: "60px 40px" }}>
-            <div style={{ fontSize: "2.5rem", marginBottom: "16px" }}>📋</div>
+            <div style={{ display: "inline-flex", padding: "12px", borderRadius: "12px", background: "var(--color-primary-subtle)", color: "var(--color-primary-accent)", marginBottom: "16px" }}><ClipboardIcon size={28} /></div>
             <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)" }}>No Prior Assessment on File</h3>
             <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "500px", margin: "8px auto 24px" }}>
               No diagnostic evaluations have been saved under Patient ID <strong>{username}</strong> yet. When your doctor evaluates your vitals and lab results, your risk trajectories will appear here automatically.
